@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using TDTK;
+using BEERPath;
 
 namespace TDTK {
 	
@@ -52,6 +53,8 @@ namespace TDTK {
 			
 			InitTower();
 			InitPlatform();
+
+            InitPathFinder();
 		}
 		
 		public GameObject indicatorBuildPoint;
@@ -536,6 +539,20 @@ namespace TDTK {
 		public static float GetGridSize(){
 			return _gridSize;
 		}
+
+        private bool[,] beerMap;
+        private Object[,] nodeMap;
+        PathFindingParameters parameters;
+        PathFinder pf;
+        List<PathNode> path;
+        public void InitPathFinder()
+        {
+            // init beermap and nodemap
+
+            parameters = new PathFindingParameters(new Point(0, 2), new Point(14, 5), beerMap, nodeMap);
+            pf = new PathFinder(parameters);
+            path = pf.FindPath();
+        }
 		
 		
 	}
