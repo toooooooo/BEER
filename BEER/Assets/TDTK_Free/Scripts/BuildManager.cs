@@ -431,6 +431,8 @@ namespace TDTK {
 				
 				//clear the build info and indicator for build manager
 				ClearBuildPoint();
+
+                UpdatePath();
 				
 				return "";
 			}
@@ -549,9 +551,18 @@ namespace TDTK {
         {
             // init beermap and nodemap
 
-            parameters = new PathFindingParameters(new Point(0, 2), new Point(14, 5), beerMap, nodeMap);
-            pf = new PathFinder(parameters);
-            path = pf.FindPath();
+            //parameters = new PathFindingParameters(new Point(0, 2), new Point(14, 5), beerMap, nodeMap);
+            //pf = new PathFinder(parameters);
+            //path = pf.FindPath();
+        }
+
+        public static void UpdatePath()
+        {
+            Object[] towers = GameObject.FindObjectsOfType(typeof(UnitTower));
+
+            Object[] platforms = GameObject.FindObjectsOfType(typeof(PlatformTD));
+
+            return;
         }
 		
 		
