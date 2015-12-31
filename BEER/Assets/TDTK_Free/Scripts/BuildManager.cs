@@ -562,6 +562,13 @@ namespace TDTK {
 
             Object[] platforms = GameObject.FindObjectsOfType(typeof(PlatformTD));
 
+
+            Object[] paths = GameObject.FindObjectsOfType(typeof(PathTD));
+
+            UnitCreep[] creeps = ObjectPoolManager.FindObjectsOfType<UnitCreep>();
+
+            //SpawnManager.ChangeDefaultPath(paths[0] as PathTD);
+
             return;
         }
 		

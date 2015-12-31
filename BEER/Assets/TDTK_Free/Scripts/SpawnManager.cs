@@ -135,7 +135,6 @@ namespace TDTK {
 			
 		}
 		
-		
 		public static int AddDestroyedSpawn(UnitCreep unit){ return instance._AddDestroyedSpawn(unit); }
 		public int _AddDestroyedSpawn(UnitCreep unit){
 			activeUnitCount+=1;
