@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using TDTK;
+using UnityEngine;
 
 namespace BEERPath
 {
@@ -132,6 +134,35 @@ namespace BEERPath
             }
 
             return path;
+        }
+
+        public PathTD FindPathTD(Transform currentPos)
+        {
+            List<Transform> path = new List<Transform>();
+            bool success = SearchPath(this.startNode);
+
+            path.Add(currentPos);
+
+            if (success)
+            {
+                PathNode node = this.destinationNode;
+                PlatformTD platform = null;
+
+                while (node.ParentNode != null)
+                {
+                    platform = node.GameObject as PlatformTD;
+                    path.Add(platform.transform);
+                    node = node.ParentNode;
+                }
+
+                path.Reverse();
+            }
+
+            PathTD ret = new PathTD();
+            ret.wpList = path;
+            ret.Init();
+
+            return ret;
         }
     }
 }
