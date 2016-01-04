@@ -11,6 +11,13 @@ namespace TDTK {
 	
 	
 	public class UnitTower : Unit {
+
+        private PlatformTD platform;
+        public PlatformTD Platform
+        {
+            get { return this.platform; }
+            set { this.platform = value; }
+        }
 		
 		public delegate void TowerSoldHandler(UnitTower tower);
 		public static event TowerSoldHandler onSoldE;									//listen by TDTK only
