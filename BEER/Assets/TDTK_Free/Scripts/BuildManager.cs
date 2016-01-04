@@ -578,33 +578,35 @@ namespace TDTK {
         nodeMap[index_x, index_z + 1] = item;
       }
 
-      // Spawn and Goal Plaforms
-      GameObject[] platformsStartGoal = GameObject.FindGameObjectsWithTag("StartGoal");
+      // Spawn Plaforms
+      GameObject[] platformsStart = GameObject.FindGameObjectsWithTag("StartPlatform");
 
-      Point pt_spawnOne = new Point(0,0);
-      Point pt_spawnTwo = new Point(0,0);
+      Point pt_spawnOne = new Point(0, 0);
+      Point pt_spawnTwo = new Point(0, 0);
+
+      foreach (GameObject item in platformsStart)
+      {
+        int index_x = (int)Mathf.Round(item.transform.position.x - min_x) / 2;
+        beerMap[index_x, 0] = true;
+        nodeMap[index_x, 0] = item;
+
+        if (item.transform.position.x < 0f)
+          pt_spawnOne = new Point(index_x, 0);
+        else
+          pt_spawnTwo = new Point(index_x, 0);
+      }
+
+        // Goal Plaforms
+        GameObject[] platformsGoal = GameObject.FindGameObjectsWithTag("GoalPlatform");
+
       Point pt_goal = new Point(0,0);
 
-      foreach (GameObject item in platformsStartGoal)
+      foreach (GameObject item in platformsGoal)
       {
-        if (item.transform.position.z < min_z)
-        {
-          int index_x = (int)Mathf.Round(item.transform.position.x - min_x) / 2;
-          beerMap[index_x, 0] = true;
-          nodeMap[index_x, 0] = item;
-
-          if (item.transform.position.x < 0f)
-            pt_spawnOne = new Point(index_x, 0);
-          else
-            pt_spawnTwo = new Point(index_x, 0);
-        }
-        else if (item.transform.position.z > max_z)
-        {
-          int index_x = (int)Mathf.Round(item.transform.position.x - min_x) / 2;
-          beerMap[index_x, 35] = true;
-          nodeMap[index_x, 35] = item;
-          pt_goal = new Point(index_x, 35);
-        }
+        int index_x = (int)Mathf.Round(item.transform.position.x - min_x) / 2;
+        beerMap[index_x, 35] = true;
+        nodeMap[index_x, 35] = item;
+        pt_goal = new Point(index_x, 35);
       }
 
       // TODO 
@@ -616,6 +618,13 @@ namespace TDTK {
       Transform spawnOneTf = (nodeMap[pt_spawnOne.X, pt_spawnOne.Y] as GameObject).transform;
       PathTD pathOne = pf.FindPathTD(spawnOneTf);
 
+      Transform spawnTwoTf = (nodeMap[pt_spawnTwo.X, pt_spawnTwo.Y] as GameObject).transform;
+      PathTD pathTwo = pf.FindPathTD(spawnTwoTf);
+
+      SpawnManager.instance.defaultPath = pathOne;
+      SpawnManager.instance.waveGenerator.pathList.Clear();
+      SpawnManager.instance.waveGenerator.pathList.Add(pathOne);
+      SpawnManager.instance.waveGenerator.pathList.Add(pathTwo);
 
       //string msg = "";
       //for (int x = 0; x < 39; x++)

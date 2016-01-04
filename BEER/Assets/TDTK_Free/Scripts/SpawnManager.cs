@@ -54,10 +54,12 @@ namespace TDTK {
 		void Awake(){
 			instance=this;
 		}
-		
-		// Use this for initialization
-		void Start () {
-			if(defaultPath==null){
+
+    // Use this for initialization
+    void Start() {
+    }
+    public void Init() {
+      if (defaultPath==null){
 				Debug.Log("DefaultPath on SpawnManager not assigned, auto search for one");
 				defaultPath=(PathTD)FindObjectOfType(typeof(PathTD));
 			}

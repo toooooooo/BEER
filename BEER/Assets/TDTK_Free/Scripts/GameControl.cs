@@ -82,7 +82,9 @@ namespace TDTK {
 			
 			BuildManager buildManager = (BuildManager)FindObjectOfType(typeof(BuildManager));
 			buildManager.Init();
-			
+
+      SpawnManager.instance.Init();
+
 			PathTD[] paths = FindObjectsOfType(typeof(PathTD)) as PathTD[];
 			for(int i=0; i<paths.Length; i++) paths[i].Init();
 			
