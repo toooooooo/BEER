@@ -60,10 +60,11 @@ namespace TDTK {
 			base.Start();
 		}
 		
-		public void InitTower(int ID){
+		public void InitTower(int ID, PlatformTD currentPlatform){
 			Init();
 			
 			instanceID=ID;
+      platform = currentPlatform;
 			
 			value=stats[currentActiveStat].cost;
 			
