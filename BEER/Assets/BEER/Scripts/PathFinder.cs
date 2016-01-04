@@ -30,9 +30,9 @@ namespace BEERPath
             this.heigth = map.GetLength(1);
             this.nodes = new PathNode[this.width, this.heigth];
 
-            for(int y = 0; y < this.heigth; y++)
+            for (int y = 0; y < this.heigth; y++)
             {
-                for(int x = 0; x < this.width; x++)
+                for (int x = 0; x < this.width; x++)
                 {
                     this.nodes[x, y] = new PathNode(x, y, map[x, y], parameters.EndLocation, parameters.GameObjects[x, y]);
                 }
@@ -45,26 +45,26 @@ namespace BEERPath
             List<PathNode> walkables = new List<PathNode>();
             IEnumerable<Point> nextLocations = GetAdjacentLocations(currentNode.Location);
 
-            foreach(Point location in nextLocations)
+            foreach (Point location in nextLocations)
             {
                 int x = location.X;
                 int y = location.Y;
 
-                if(x < 0 || x >= this.width || y < 0 || y >= this.heigth)
+                if (x < 0 || x >= this.width || y < 0 || y >= this.heigth)
                     continue;
-                
+
 
                 PathNode node = this.nodes[x, y];
 
-                if(!node.Walkable || node.State == PathNodeState.Included)
+                if (!node.Walkable || node.State == PathNodeState.Included)
                     continue;
-                
-                if(node.State == PathNodeState.Possible)
+
+                if (node.State == PathNodeState.Possible)
                 {
                     float cost = PathNode.GetCost(node.Location, node.ParentNode.Location);
                     float tmp = currentNode.CostFromStart + cost;
 
-                    if(tmp < node.CostFromStart)
+                    if (tmp < node.CostFromStart)
                     {
                         node.ParentNode = currentNode;
                         walkables.Add(node);
@@ -98,9 +98,9 @@ namespace BEERPath
 
             nextNodes.Sort((node1, node2) => node1.CostTotal.CompareTo(node2.CostTotal));
 
-            foreach(PathNode nextNode in nextNodes)
+            foreach (PathNode nextNode in nextNodes)
             {
-                if(nextNode.Location == this.destinationNode.Location)
+                if (nextNode.Location == this.destinationNode.Location)
                 {
                     return true;
                 }
@@ -120,11 +120,11 @@ namespace BEERPath
             List<PathNode> path = new List<PathNode>();
             bool success = SearchPath(this.startNode);
 
-            if(success)
+            if (success)
             {
                 PathNode node = this.destinationNode;
 
-                while(node.ParentNode != null)
+                while (node.ParentNode != null)
                 {
                     path.Add(node);
                     node = node.ParentNode;
