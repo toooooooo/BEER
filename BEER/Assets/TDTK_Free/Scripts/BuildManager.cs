@@ -426,13 +426,13 @@ namespace TDTK {
 				
 				GameObject towerObj=(GameObject)Instantiate(tower.gameObject, buildInfo.position, buildInfo.platform.thisT.rotation);
 				UnitTower towerInstance=towerObj.GetComponent<UnitTower>();
-				towerInstance.InitTower(instance.towerCount+=1);
+				towerInstance.InitTower(instance.towerCount+=1, buildInfo.platform);
 				towerInstance.Build();
 				
 				//clear the build info and indicator for build manager
 				ClearBuildPoint();
 
-                UpdatePath();
+        UpdatePath();
 				
 				return "";
 			}
@@ -454,7 +454,7 @@ namespace TDTK {
 			}
 			else Debug.Log("no platform found for pre-placed tower");
 			
-			tower.InitTower(instance.towerCount+=1);
+			tower.InitTower(instance.towerCount+=1, platform);
 		}
 		
 		
@@ -542,35 +542,78 @@ namespace TDTK {
 			return _gridSize;
 		}
 
-        private bool[,] beerMap;
-        private Object[,] nodeMap;
-        PathFindingParameters parameters;
-        PathFinder pf;
-        List<PathNode> path;
-        public void InitPathFinder()
-        {
-            // init beermap and nodemap
+      private bool[,] beerMap;
+      private Object[,] nodeMap;
+      PathFindingParameters parameters;
+      PathFinder pf;
+      List<PathNode> path;
+      public void InitPathFinder()
+      {
+      // init beermap and nodemap
+      beerMap = new bool[39, 36] {
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
+        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false }
+      };
 
-            //parameters = new PathFindingParameters(new Point(0, 2), new Point(14, 5), beerMap, nodeMap);
-            //pf = new PathFinder(parameters);
-            //path = pf.FindPath();
-        }
+        Object[] platformsMain = GameObject.FindGameObjectsWithTag("Grid");
 
-        public static void UpdatePath()
-        {
-            Object[] towers = GameObject.FindObjectsOfType(typeof(UnitTower));
+      //parameters = new PathFindingParameters(new Point(0, 2), new Point(14, 5), beerMap, nodeMap);
+      //pf = new PathFinder(parameters);
+      //path = pf.FindPath();
+      }
 
-            Object[] platforms = GameObject.FindObjectsOfType(typeof(PlatformTD));
+      public static void UpdatePath()
+      {
+          Object[] towers = GameObject.FindObjectsOfType(typeof(UnitTower));
+
+          Object[] platforms = GameObject.FindObjectsOfType(typeof(PlatformTD));
 
 
-            Object[] paths = GameObject.FindObjectsOfType(typeof(PathTD));
+          Object[] paths = GameObject.FindObjectsOfType(typeof(PathTD));
 
-            UnitCreep[] creeps = ObjectPoolManager.FindObjectsOfType<UnitCreep>();
+          UnitCreep[] creeps = ObjectPoolManager.FindObjectsOfType<UnitCreep>();
 
-            //SpawnManager.ChangeDefaultPath(paths[0] as PathTD);
+          //SpawnManager.ChangeDefaultPath(paths[0] as PathTD);
 
-            return;
-        }
+          return;
+      }
 		
 		
 	}
