@@ -141,7 +141,6 @@ namespace BEERPath
             List<Transform> path = new List<Transform>();
             bool success = SearchPath(this.startNode);
 
-            path.Add(currentPos);
 
             if (success)
             {
@@ -155,10 +154,14 @@ namespace BEERPath
                     node = node.ParentNode;
                 }
 
+                path.Add(currentPos);
+
                 path.Reverse();
             }
-
-            PathTD ret = new PathTD();
+            
+            GameObject go = new GameObject("path");
+            go.AddComponent<PathTD>();
+            PathTD ret = go.GetComponent<PathTD>();
             ret.wpList = path;
             ret.Init();
 
