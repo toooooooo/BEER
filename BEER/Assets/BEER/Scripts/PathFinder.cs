@@ -146,11 +146,11 @@ namespace BEERPath
             if (success)
             {
                 PathNode node = this.destinationNode;
-                PlatformTD platform = null;
+                GameObject platform = null;
 
                 while (node.ParentNode != null)
                 {
-                    platform = node.GameObject as PlatformTD;
+                    platform = node.GameObject as GameObject;
                     path.Add(platform.transform);
                     node = node.ParentNode;
                 }

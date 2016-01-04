@@ -542,80 +542,115 @@ namespace TDTK {
 			return _gridSize;
 		}
 
-      private bool[,] beerMap;
-      private Object[,] nodeMap;
-      PathFindingParameters parameters;
-      PathFinder pf;
-      List<PathNode> path;
-      public void InitPathFinder()
-      {
+    private bool[,] beerMap;
+    private Object[,] nodeMap;
+    PathFindingParameters parameters;
+    PathFinder pf;
+    List<PathNode> path;
+    public void InitPathFinder()
+    {
       // init beermap and nodemap
-      beerMap = new bool[39, 36] {
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false },
-        { false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false }
-      };
+      beerMap = new bool[39, 36];
+      nodeMap = new Object[39, 36];
 
-        Object[] platformsMain = GameObject.FindGameObjectsWithTag("Grid");
+      GameObject[] platformsMain = GameObject.FindGameObjectsWithTag("Grid");
+
+      float min_z = 0;
+      float min_x = 0;
+      float max_z = 0;
+
+      foreach (GameObject item in platformsMain)
+      {
+        if (item.transform.position.z < min_z)
+          min_z = item.transform.position.z;
+        else if (item.transform.position.z > max_z)
+          max_z = item.transform.position.z;
+
+        if (item.transform.position.x < min_x)
+          min_x = item.transform.position.x;
+      }
+
+      foreach (GameObject item in platformsMain)
+      {
+        int index_z = (int) Mathf.Round(item.transform.position.z - min_z) / 2;
+        int index_x = (int) Mathf.Round(item.transform.position.x - min_x) / 2;
+        beerMap[index_x, index_z + 1] = true;
+        nodeMap[index_x, index_z + 1] = item;
+      }
+
+      // Spawn and Goal Plaforms
+      GameObject[] platformsStartGoal = GameObject.FindGameObjectsWithTag("StartGoal");
+
+      Point pt_spawnOne = new Point(0,0);
+      Point pt_spawnTwo = new Point(0,0);
+      Point pt_goal = new Point(0,0);
+
+      foreach (GameObject item in platformsStartGoal)
+      {
+        if (item.transform.position.z < min_z)
+        {
+          int index_x = (int)Mathf.Round(item.transform.position.x - min_x) / 2;
+          beerMap[index_x, 0] = true;
+          nodeMap[index_x, 0] = item;
+
+          if (item.transform.position.x < 0f)
+            pt_spawnOne = new Point(index_x, 0);
+          else
+            pt_spawnTwo = new Point(index_x, 0);
+        }
+        else if (item.transform.position.z > max_z)
+        {
+          int index_x = (int)Mathf.Round(item.transform.position.x - min_x) / 2;
+          beerMap[index_x, 35] = true;
+          nodeMap[index_x, 35] = item;
+          pt_goal = new Point(index_x, 35);
+        }
+      }
+
+      // TODO 
+      // PAth auch in PathList von WaveGenerator setzen !! Object vom SpawnManager
+
+      parameters = new PathFindingParameters(pt_spawnOne, pt_goal, beerMap, nodeMap);
+      pf = new PathFinder(parameters);
+      //path = pf.FindPath();
+      Transform spawnOneTf = (nodeMap[pt_spawnOne.X, pt_spawnOne.Y] as GameObject).transform;
+      PathTD pathOne = pf.FindPathTD(spawnOneTf);
+
+
+      //string msg = "";
+      //for (int x = 0; x < 39; x++)
+      //{
+      //  for (int z = 0; z < 36; z++)
+      //  {
+      //    if (beerMap[x, z] == true)
+      //      msg += "*";
+      //    else
+      //      msg += "-";
+      //  }
+      //  msg += "\r\n";
+      //}
+      //Debug.Log(msg);
 
       //parameters = new PathFindingParameters(new Point(0, 2), new Point(14, 5), beerMap, nodeMap);
       //pf = new PathFinder(parameters);
       //path = pf.FindPath();
-      }
+    }
 
-      public static void UpdatePath()
-      {
-          Object[] towers = GameObject.FindObjectsOfType(typeof(UnitTower));
+    public static void UpdatePath()
+    {
+        Object[] towers = GameObject.FindObjectsOfType(typeof(UnitTower));
 
-          Object[] platforms = GameObject.FindObjectsOfType(typeof(PlatformTD));
+        Object[] platforms = GameObject.FindObjectsOfType(typeof(PlatformTD));
 
 
-          Object[] paths = GameObject.FindObjectsOfType(typeof(PathTD));
+        Object[] paths = GameObject.FindObjectsOfType(typeof(PathTD));
 
-          UnitCreep[] creeps = ObjectPoolManager.FindObjectsOfType<UnitCreep>();
+        UnitCreep[] creeps = ObjectPoolManager.FindObjectsOfType<UnitCreep>();
 
-          //SpawnManager.ChangeDefaultPath(paths[0] as PathTD);
+        //SpawnManager.ChangeDefaultPath(paths[0] as PathTD);
 
-          return;
-      }
-		
-		
+        return;
+    }		
 	}
 	
 
