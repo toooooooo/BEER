@@ -94,6 +94,21 @@ namespace TDTK {
 				}
 			}
 		}
+
+        public void SetNewPath(PathTD newPath)
+        {
+            path = newPath;
+            waypointID = 1;
+            waypointList = path.GetWaypointList();
+
+            distFromDestination = CalculateDistFromDestination();
+        }
+
+        public Vector3 CurrentPosition
+        {
+            get { return thisT.position; }
+            private set { }
+        }
 		
 		//function call to rotate and move toward a pecific point, return true when the point is reached
 		public bool MoveToPoint(Vector3 point){
