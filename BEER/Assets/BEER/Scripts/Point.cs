@@ -28,5 +28,16 @@ namespace BEERPath
             return (this.X == p.X) && (this.Y == p.Y);
         }
 
-    }
+        public override int GetHashCode()
+        {
+          // Dummy number
+          return 1234;
+        }
+
+        public override string ToString()
+        {
+          return "Dummy text from BeerPath!";
+        }
+
+  }
 }

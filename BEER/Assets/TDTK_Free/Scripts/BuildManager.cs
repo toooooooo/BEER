@@ -693,6 +693,13 @@ namespace TDTK
 
     public void GenerateGlobalPaths()
     {
+      // Delete the old paths from the previous calculations
+      Object[] existingPaths = GameObject.FindObjectsOfType(typeof(PathTD));
+      foreach (PathTD item in existingPaths)
+      {
+        Destroy(item.gameObject);
+      }
+
       parameters = new PathFindingParameters(pt_spawnOne, pt_goal, beerMap, nodeMap);
       pf = new PathFinder(parameters);
       Transform spawnOneTf = (nodeMap[pt_spawnOne.X, pt_spawnOne.Y] as GameObject).transform;
@@ -702,7 +709,6 @@ namespace TDTK
       pf = new PathFinder(parameters);
       Transform spawnTwoTf = (nodeMap[pt_spawnTwo.X, pt_spawnTwo.Y] as GameObject).transform;
       PathTD pathTwo = pf.FindPathTD(spawnTwoTf);
-
 
       // TODO better capsulation from the Spawnmanager
       // and also check the initialization of the spawnmanager
@@ -729,14 +735,25 @@ namespace TDTK
       UnitCreep[] creeps = ObjectPoolManager.FindObjectsOfType<UnitCreep>();
       foreach (UnitCreep creep in creeps)
       {
-        int c_z = (int)Mathf.Round(creep.transform.position.z - platform_min_z) / 2;
-        int c_x = (int)Mathf.Round(creep.transform.position.x - platform_min_x) / 2;
-        parameters = new PathFindingParameters(new Point(c_x, c_z), pt_goal, beerMap, nodeMap);
-        pf = new PathFinder(parameters);
+        // Problem with creeps not in the maze -> between start and normal platforms
+        // or between normal platforms and goal
+        // No new Path, if creep is already past the last tower row
+        if (creep.transform.position.z > platform_min_z)
+        {
+          int c_z;
+          if (creep.transform.position.z > platform_max_z)
+            c_z = 34;
+          else
+            c_z = (int)Mathf.Round(creep.transform.position.z - platform_min_z) / 2;
 
-        PathTD pt = pf.FindPathTD(creep.transform);
+          int c_x = (int)Mathf.Round(creep.transform.position.x - platform_min_x) / 2;
+          parameters = new PathFindingParameters(new Point(c_x, c_z), pt_goal, beerMap, nodeMap);
+          pf = new PathFinder(parameters);
 
-        creep.SetNewPath(pt);
+          PathTD pt = pf.FindPathTD(creep.transform);
+
+          creep.SetNewPath(pt);
+        }
       }
 
       //Object[] towers = GameObject.FindObjectsOfType(typeof(UnitTower));
