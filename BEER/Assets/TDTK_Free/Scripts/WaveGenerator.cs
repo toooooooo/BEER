@@ -29,6 +29,25 @@ namespace TDTK {
 			}
 		}
 		
+    public void UpdateWavePath(Wave oldWave)
+    {
+      if (pathList.Count == 0)
+      {
+        Debug.Log("no path at all");
+        return;
+      }
+
+      int startingPathID = Random.Range(0, pathList.Count);
+
+      for (int i = 0; i < oldWave.subWaveList.Count; i++)
+      {
+        //iterate through the path, randomly skip one
+        int pathID = startingPathID + (Random.Range(0f, 1f) > 0.75f ? 1 : 0);
+        while (pathID >= pathList.Count) pathID -= pathList.Count;
+        oldWave.subWaveList[i].path = pathList[pathID];
+      }
+    }
+
 		public Wave Generate(int waveID){
 			if(pathList.Count==0){
 				Debug.Log("no path at all");
