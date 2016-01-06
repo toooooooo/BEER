@@ -136,7 +136,7 @@ namespace BEERPath
       return path;
     }
 
-    public PathTD FindPathTD(Transform currentPos)
+    public PathTD FindPathTD(Transform currentPos, string pathName)
     {
       List<Transform> path = new List<Transform>();
       bool success = SearchPath(this.startNode);
@@ -161,7 +161,7 @@ namespace BEERPath
 
       // TODO better solution
       // PathTD works only in an parent GameObject --> hard to destroy afterwards
-      GameObject go = new GameObject("CalculatedPath");
+      GameObject go = new GameObject(pathName);
       go.AddComponent<PathTD>();
       PathTD ret = go.GetComponent<PathTD>();
       ret.dynamicOffset = 0.2f;

@@ -108,11 +108,16 @@ namespace TDTK
 
         public void SetNewPath(PathTD newPath)
         {
-            path = newPath;
-            waypointID = 1;
-            waypointList = path.GetWaypointList();
+          if (path != null && path.name == "CreepCustomPath")
+          {
+            Destroy(path.gameObject);
+          }
 
-            distFromDestination = CalculateDistFromDestination();
+          path = newPath;
+          waypointID = 1;
+          waypointList = path.GetWaypointList();
+
+          distFromDestination = CalculateDistFromDestination();
         }
 
         public Vector3 CurrentPosition

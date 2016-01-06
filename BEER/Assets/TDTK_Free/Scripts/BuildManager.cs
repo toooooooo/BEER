@@ -703,12 +703,12 @@ namespace TDTK
       parameters = new PathFindingParameters(pt_spawnOne, pt_goal, beerMap, nodeMap);
       pf = new PathFinder(parameters);
       Transform spawnOneTf = (nodeMap[pt_spawnOne.X, pt_spawnOne.Y] as GameObject).transform;
-      PathTD pathOne = pf.FindPathTD(spawnOneTf);
+      PathTD pathOne = pf.FindPathTD(spawnOneTf, "GlobalPathOne");
 
       parameters = new PathFindingParameters(pt_spawnTwo, pt_goal, beerMap, nodeMap);
       pf = new PathFinder(parameters);
       Transform spawnTwoTf = (nodeMap[pt_spawnTwo.X, pt_spawnTwo.Y] as GameObject).transform;
-      PathTD pathTwo = pf.FindPathTD(spawnTwoTf);
+      PathTD pathTwo = pf.FindPathTD(spawnTwoTf, "GlobalPathTwo");
 
       // TODO better capsulation from the Spawnmanager
       // and also check the initialization of the spawnmanager
@@ -727,6 +727,8 @@ namespace TDTK
       GenerateGlobalPaths();
 
       // TODO position of this SpawnManager functions ?
+      // Here becazse GenerateGlobalPaths is called at startup
+      // Waves not generated at that time
       for (int i = 0; i < SpawnManager.instance.waveList.Count; i++)
       {
         SpawnManager.instance.waveGenerator.UpdateWavePath(SpawnManager.instance.waveList[i]);
@@ -750,7 +752,7 @@ namespace TDTK
           parameters = new PathFindingParameters(new Point(c_x, c_z), pt_goal, beerMap, nodeMap);
           pf = new PathFinder(parameters);
 
-          PathTD pt = pf.FindPathTD(creep.transform);
+          PathTD pt = pf.FindPathTD(creep.transform, "CreepCustomPath");
 
           creep.SetNewPath(pt);
         }
