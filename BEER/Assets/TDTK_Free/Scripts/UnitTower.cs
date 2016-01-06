@@ -97,8 +97,14 @@ namespace TDTK {
 		[HideInInspector] public float buildDuration;
 		public void UnBuild(){ StartCoroutine(Building(stats[currentActiveStat].unBuildDuration, true));	}
 		public void Build(){ StartCoroutine(Building(stats[currentActiveStat].buildDuration));	}
-		IEnumerator Building(float duration, bool reverse=false){		//reverse flag is set to true when selling (thus unbuilding) the tower
-			construction=!reverse ? _Construction.Constructing : _Construction.Deconstructing;
+		IEnumerator Building(float duration, bool reverse=false){       //reverse flag is set to true when selling (thus unbuilding) the tower
+
+            if(!BuildManager.instance.UpdatePathMaps(this, reverse))
+            {
+                reverse = true;
+            }
+
+            construction =!reverse ? _Construction.Constructing : _Construction.Deconstructing;
 			
 			builtDuration=0;
 			buildDuration=duration;

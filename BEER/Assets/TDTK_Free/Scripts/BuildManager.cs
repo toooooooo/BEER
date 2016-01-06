@@ -39,7 +39,7 @@ namespace TDTK
 
 
 
-    private static BuildManager instance;
+    public static BuildManager instance;
     private static BuildInfo buildInfo;
     private int towerCount = 0;
     public static int GetTowerCount() { return instance.towerCount; }
@@ -486,7 +486,6 @@ namespace TDTK
         //clear the build info and indicator for build manager
         ClearBuildPoint();
 
-        instance.UpdatePathMaps(towerInstance);
 
         return "";
       }
