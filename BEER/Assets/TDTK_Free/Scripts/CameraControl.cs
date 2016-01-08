@@ -56,8 +56,10 @@ namespace TDTK {
 		
 		
 		
-		private float currentZoom=0;
-		
+		private float currentZoom = 0;
+    private float mouseSensitivity = 1f;
+    private Vector3 lastMousePosition;
+
 		private Transform thisT;
 		public static CameraControl instance;
 		
@@ -129,8 +131,7 @@ namespace TDTK {
 			}	
 			
 			Quaternion direction=Quaternion.Euler(0, thisT.eulerAngles.y, 0);
-			
-			
+					
 			if(enableKeyPanning){
 				if(Input.GetButton("Horizontal")) {
 					Vector3 dir=transform.InverseTransformDirection(direction*Vector3.right);
@@ -142,21 +143,46 @@ namespace TDTK {
 					thisT.Translate (dir * panSpeed * deltaT * Input.GetAxisRaw("Vertical"));
 				}
 			}
-			if(enableMousePanning){
-				Vector3 mousePos=Input.mousePosition;
-				Vector3 dirHor=transform.InverseTransformDirection(direction*Vector3.right);
-				if(mousePos.x<=0) thisT.Translate(dirHor * panSpeed * deltaT * -3);
-				else if(mousePos.x<=mousePanningZoneWidth) thisT.Translate(dirHor * panSpeed * deltaT * -1);
-				else if(mousePos.x>=Screen.width) thisT.Translate(dirHor * panSpeed * deltaT * 3);
-				else if(mousePos.x>Screen.width-mousePanningZoneWidth) thisT.Translate(dirHor * panSpeed * deltaT * 1);
-				
-				Vector3 dirVer=transform.InverseTransformDirection(direction*Vector3.forward);
-				if(mousePos.y<=0) thisT.Translate(dirVer * panSpeed * deltaT * -3);
-				else if(mousePos.y<=mousePanningZoneWidth) thisT.Translate(dirVer * panSpeed * deltaT * -1);
-				else if(mousePos.y>=Screen.height) thisT.Translate(dirVer * panSpeed * deltaT * 3);
-				else if(mousePos.y>Screen.height-mousePanningZoneWidth) thisT.Translate(dirVer * panSpeed * deltaT * 1);
-			}
-			
+
+      if (enableMousePanning)
+      {
+        if (Input.GetMouseButtonDown(0))
+        {
+          lastMousePosition = Input.mousePosition;
+        }
+        if (Input.GetMouseButton(0))
+        {
+          Vector3 delta = Input.mousePosition - lastMousePosition;
+          //if (delta.x != 0)
+          //{
+          //  Vector3 dir = transform.InverseTransformDirection(direction * Vector3.right);
+          //  thisT.Translate(dir * panSpeed * delta.x * Input.GetAxisRaw("Horizontal"));
+          //}
+
+          //if (delta.y != 0)
+          //{
+          //  Vector3 dir = transform.InverseTransformDirection(direction * Vector3.forward);
+          //  thisT.Translate(dir * panSpeed * delta.y * Input.GetAxisRaw("Vertical"));
+          //}
+
+          // TODO delta.x and delta.y should be in global koordinates and change the global position of the camera
+
+          thisT.Translate(delta.x * mouseSensitivity, delta.y * mouseSensitivity, 0); // only for 2D
+          lastMousePosition = Input.mousePosition;
+        }
+      }
+      //Vector3 mousePos=Input.mousePosition;
+      //Vector3 dirHor=transform.InverseTransformDirection(direction*Vector3.right);
+      //if(mousePos.x<=0) thisT.Translate(dirHor * panSpeed * deltaT * -3);
+      //else if(mousePos.x<=mousePanningZoneWidth) thisT.Translate(dirHor * panSpeed * deltaT * -1);
+      //else if(mousePos.x>=Screen.width) thisT.Translate(dirHor * panSpeed * deltaT * 3);
+      //else if(mousePos.x>Screen.width-mousePanningZoneWidth) thisT.Translate(dirHor * panSpeed * deltaT * 1);
+
+      //Vector3 dirVer=transform.InverseTransformDirection(direction*Vector3.forward);
+      //if(mousePos.y<=0) thisT.Translate(dirVer * panSpeed * deltaT * -3);
+      //else if(mousePos.y<=mousePanningZoneWidth) thisT.Translate(dirVer * panSpeed * deltaT * -1);
+      //else if(mousePos.y>=Screen.height) thisT.Translate(dirVer * panSpeed * deltaT * 3);
+      //else if(mousePos.y>Screen.height-mousePanningZoneWidth) thisT.Translate(dirVer * panSpeed * deltaT * 1);	
 			
 			float zoomInput=Input.GetAxis("Mouse ScrollWheel");
 			if(zoomInput!=0){
