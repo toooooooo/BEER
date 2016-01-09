@@ -153,6 +153,12 @@ namespace TDTK {
         if (Input.GetMouseButton(0))
         {
           Vector3 delta = Input.mousePosition - lastMousePosition;
+
+          Vector3 pos = Camera.main.ScreenToViewportPoint(delta);
+
+          Vector3 move = new Vector3(pos.x * panSpeed, pos.y * panSpeed, 0);
+          transform.Translate(move, Space.Self);
+
           //if (delta.x != 0)
           //{
           //  Vector3 dir = transform.InverseTransformDirection(direction * Vector3.right);
@@ -167,8 +173,8 @@ namespace TDTK {
 
           // TODO delta.x and delta.y should be in global koordinates and change the global position of the camera
 
-          thisT.Translate(delta.x * mouseSensitivity, delta.y * mouseSensitivity, 0); // only for 2D
-          lastMousePosition = Input.mousePosition;
+          //thisT.Translate(delta.x * mouseSensitivity, delta.y * mouseSensitivity, 0); // only for 2D
+          //lastMousePosition = Input.mousePosition;
         }
       }
       //Vector3 mousePos=Input.mousePosition;
