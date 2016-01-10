@@ -57,7 +57,7 @@ namespace TDTK {
 		
 		
 		private float currentZoom = 0;
-    private float mouseSensitivity = 1f;
+    //private float mouseSensitivity = 1f;
     private Vector3 lastMousePosition;
 
 		private Transform thisT;

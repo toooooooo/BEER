@@ -108,6 +108,8 @@ namespace TDTK
 
         public void SetNewPath(PathTD newPath)
         {
+          // TODO Path destruction is here ?
+          // Paths zero ??
           if (path != null && path.name == "CreepCustomPath")
           {
             Destroy(path.gameObject);

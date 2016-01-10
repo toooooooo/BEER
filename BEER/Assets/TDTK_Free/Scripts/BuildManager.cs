@@ -758,7 +758,7 @@ namespace TDTK
                     if (creep.transform.position.z > platform_max_z)
                         c_z = 34;
                     else
-                        c_z = (int)Mathf.Round(creep.transform.position.z - platform_min_z) / 2;
+                        c_z = Mathf.CeilToInt(creep.transform.position.z - platform_min_z) / 2; // Changed to CeilToInt and not round
 
                     int c_x = (int)Mathf.Round(creep.transform.position.x - platform_min_x) / 2;
                     parameters = new PathFindingParameters(new Point(c_x, c_z), pt_goal, beerMap, nodeMap);
