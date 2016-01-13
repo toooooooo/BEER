@@ -23,9 +23,14 @@ namespace TDTK {
 				}
 				
 				buttonList[i].label.text=displayedName[i];
-			}
-			
-			frame.sizeDelta=new Vector2(200, 30+levelName.Count*40);
+                
+            }
+
+
+            buttonList.Add(buttonList[0].Clone("ButtonQuit", new Vector3(0, -levelName.Count * 40, 0)));
+            buttonList[levelName.Count].label.text = "Quit";
+
+            frame.sizeDelta=new Vector2(200, 30+(levelName.Count + 1)*40);
 		}
 		
 		// Update is called once per frame
@@ -34,11 +39,20 @@ namespace TDTK {
 		}
 		
 		public void OnStartButton(GameObject butObj){
-			for(int i=0; i<buttonList.Count; i++){
-				if(buttonList[i].rootObj==butObj){
-					Application.LoadLevel(levelName[i]);
-				}
-			}
+            if (butObj.name == "ButtonQuit")
+            {
+                Application.Quit();
+            }
+            else
+            {
+                for (int i = 0; i < buttonList.Count; i++)
+                {
+                    if (buttonList[i].rootObj == butObj)
+                    {
+                        Application.LoadLevel(levelName[i]);
+                    }
+                }
+            }
 		}
 		
 	}
