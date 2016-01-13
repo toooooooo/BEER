@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using TDTK;
 using UnityEngine;
 
@@ -162,9 +163,16 @@ namespace BEERPath
       // TODO better solution
       // PathTD works only in an parent GameObject --> hard to destroy afterwards
       GameObject go = new GameObject(pathName);
+
+      //public GameObject PathIndicator1;
+      //GameObject Indicator1;
+      //Indicator1 = Instantiate(PathIndicator1, new Vector3(0,0,0), Quaternion.identity);
+      //Instantiate(Indicator1, new Vector3(0, 0, 0), Quaternion.identity);
+
       go.AddComponent<PathTD>();
       PathTD ret = go.GetComponent<PathTD>();
       ret.dynamicOffset = 0.2f;
+      ret.createPathLine = false;
       ret.wpList = path;
       ret.Init();
 
