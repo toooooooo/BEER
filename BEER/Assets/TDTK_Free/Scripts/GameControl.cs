@@ -59,10 +59,11 @@ namespace TDTK
         public static void LoadMainMenu() { if (instance.mainMenu != "") Load(instance.mainMenu); }
         public static void Load(string levelName)
         {
-            //if(gameState==_GameState.Ended && instance.playerLife>0){
-            //	ResourceManager.NewSceneNotification();
-            //}
-            Application.LoadLevel(levelName);
+          //if(gameState==_GameState.Ended && instance.playerLife>0){
+          //	ResourceManager.NewSceneNotification();
+          //}
+          //Application.LoadLevel(levelName);
+          UnityEngine.SceneManagement.SceneManager.LoadScene(levelName);
         }
 
 
