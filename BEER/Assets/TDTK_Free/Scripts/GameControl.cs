@@ -62,8 +62,8 @@ namespace TDTK
           //if(gameState==_GameState.Ended && instance.playerLife>0){
           //	ResourceManager.NewSceneNotification();
           //}
-          //Application.LoadLevel(levelName);
-          UnityEngine.SceneManagement.SceneManager.LoadScene(levelName);
+          Application.LoadLevel(levelName);
+          //UnityEngine.SceneManagement.SceneManager.LoadScene(levelName);
         }
 
 
