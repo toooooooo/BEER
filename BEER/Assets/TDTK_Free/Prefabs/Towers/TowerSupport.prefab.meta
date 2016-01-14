@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8b63207df94179e4ab93ac26d5c6a8dc
+guid: 899ec02ba29b33e41b8c30c78485a34e
 labels:
 - Free
 - creep
@@ -8,6 +8,8 @@ labels:
 - TD
 - TowerDefense
 - TDTK
+timeCreated: 1452798203
+licenseType: Free
 NativeFormatImporter:
   userData: 
   assetBundleName: 

@@ -140,6 +140,8 @@ namespace TDTK
 
             if (!reverse && onConstructionCompleteE != null) onConstructionCompleteE(this);
 
+            buildFinished();
+
             if (reverse)
             {
                 if (onSoldE != null) onSoldE(this);
@@ -155,6 +157,27 @@ namespace TDTK
             if (construction == _Construction.Constructing) return builtDuration / buildDuration;
             if (construction == _Construction.Deconstructing) return (buildDuration - builtDuration) / buildDuration;
             else return 0;
+        }
+
+        private void buildFinished()
+        {
+            if (electricityFacility)
+            {
+                UIOverlay.NewElectricity(this);
+                StartCoroutine(GenerateEnergyRoutine(this));
+            }
+            // new TextOverlay(thisT.position, "100", new Color(0f, 1f, .4f, 1f));
+            // if (onDamagedE != null) onDamagedE(this);
+        }
+
+        IEnumerator GenerateEnergyRoutine(Unit unit)
+        {
+            while(unit != null)
+            {
+                unit.currentElectricity += unit.electricityRegenerationRate;
+
+                yield return null;
+            }
         }
 
 

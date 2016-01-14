@@ -49,10 +49,41 @@ namespace TDTK {
 		public List<Text> textOverlayList=new List<Text>();
 		
 		public List<Unit> overlayedUnitList=new List<Unit>();
-		
-		
-		
-		public static void NewUnit(Unit unit){ instance.StartCoroutine(instance._UnitOverlay(unit)); }
+
+        public static void NewElectricity(Unit unit) { instance.StartCoroutine(instance._ElectricityValueOverlay(unit)); }
+        IEnumerator _ElectricityValueOverlay(Unit unit)
+        {
+            if (overlayedUnitList.Contains(unit)) yield break;
+
+            overlayedUnitList.Add(unit);
+
+            UnitOverlay overlay = GetUnusedOverlay();
+            overlay.rootObj.SetActive(true);
+
+            // if (unit.defaultShield > 0) overlay.barShield.gameObject.SetActive(true);
+            // disable shield
+            overlay.barShield.gameObject.SetActive(false);
+
+            while (unit != null)
+            {
+                overlay.barHP.value = unit.currentElectricity / unit.maxElectricity;
+                // if (unit.defaultShield > 0) overlay.barShield.value = unit.shield / unit.fullShield;
+
+                Vector3 screenPos = mainCam.WorldToScreenPoint(unit.thisT.position + new Vector3(0, 0, 0));
+                overlay.rootT.localPosition = screenPos + new Vector3(0, 20, 0);
+
+                // if (overlay.barHP.value == 1 && overlay.barShield.value == 1) break;
+
+                yield return null;
+            }
+
+            overlay.rootObj.SetActive(false);
+            overlayedUnitList.Remove(unit);
+        }
+
+
+
+        public static void NewUnit(Unit unit){ instance.StartCoroutine(instance._UnitOverlay(unit)); }
 		IEnumerator _UnitOverlay(Unit unit){
 			if(overlayedUnitList.Contains(unit)) yield break;
 			

@@ -71,11 +71,15 @@ namespace TDTK {
 		public bool immuneToCrit=false;
 		public bool immuneToSlow=false;
 		public bool immuneToStun=false;
-		
-		
-		//public int level=1;
-		
-		public int currentActiveStat=0;
+
+        public bool electricityFacility = false;
+        public float maxElectricity = 20;
+        public float currentElectricity = 0;
+        public float electricityRegenerationRate = 0.04f;
+
+        //public int level=1;
+
+        public int currentActiveStat=0;
 		[HideInInspector] public List<UnitStat> stats=new List<UnitStat>();
 		
 		
