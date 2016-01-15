@@ -166,15 +166,36 @@ namespace TDTK
                 UIOverlay.NewElectricity(this);
                 StartCoroutine(GenerateEnergyRoutine(this));
             }
+            else if (electricityReciever)
+            {
+                UIOverlay.NewElectricityReciever(this);
+                StartCoroutine(GenerateEnergyRoutine(this));
+            }
             // new TextOverlay(thisT.position, "100", new Color(0f, 1f, .4f, 1f));
             // if (onDamagedE != null) onDamagedE(this);
         }
 
         IEnumerator GenerateEnergyRoutine(Unit unit)
         {
+            if (!unit.electricityFacility)
+                yield return null;
+
             while(unit != null)
             {
                 unit.currentElectricity += unit.electricityRegenerationRate;
+
+                yield return null;
+            }
+        }
+
+        IEnumerator ReceiveEnergyRoutine(Unit unit)
+        {
+            if (!unit.electricityReciever)
+                yield return null;
+
+            while (unit != null)
+            {
+                unit.currentElectricity += unit.electricityRegenerationRate-unit.currentSpendingRate;
 
                 yield return null;
             }

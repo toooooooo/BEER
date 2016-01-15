@@ -82,6 +82,36 @@ namespace TDTK {
         }
 
 
+        public static void NewElectricityReciever(Unit unit) { instance.StartCoroutine(instance._ElectricityRecieverOverlay(unit)); }
+        IEnumerator _ElectricityRecieverOverlay(Unit unit)
+        {
+            if (overlayedUnitList.Contains(unit)) yield break;
+
+            overlayedUnitList.Add(unit);
+
+            UnitOverlay overlay = GetUnusedOverlay();
+            overlay.rootObj.SetActive(true);
+
+            overlay.barShield.gameObject.SetActive(true);
+            overlay.barHP.gameObject.SetActive(false);
+
+            while (unit != null)
+            {
+                overlay.barShield.value = unit.currentElectricity / unit.maxElectricity;
+
+                Vector3 screenPos = mainCam.WorldToScreenPoint(unit.thisT.position + new Vector3(0, 0, 0));
+                overlay.rootT.localPosition = screenPos + new Vector3(0, 20, 0);
+
+                // if (overlay.barHP.value == 1 && overlay.barShield.value == 1) break;
+
+                yield return null;
+            }
+
+            overlay.rootObj.SetActive(false);
+            overlayedUnitList.Remove(unit);
+        }
+
+
 
         public static void NewUnit(Unit unit){ instance.StartCoroutine(instance._UnitOverlay(unit)); }
 		IEnumerator _UnitOverlay(Unit unit){

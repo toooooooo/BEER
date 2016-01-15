@@ -77,6 +77,9 @@ namespace TDTK {
         public float currentElectricity = 0;
         public float electricityRegenerationRate = 0.04f;
 
+        public bool electricityReciever = false;
+        public float currentSpendingRate = 0.02f;
+
         //public int level=1;
 
         public int currentActiveStat=0;
