@@ -26,7 +26,7 @@ namespace TDTK {
 		
 		public float panSpeed=5;
 		public float zoomSpeed=5;
-		
+    public float mousePanSpeed = .5f;
 		
 		public bool enableMouseRotate=true;
 		public bool enableMousePanning=false;
@@ -57,7 +57,6 @@ namespace TDTK {
 		
 		
 		private float currentZoom = 0;
-    //private float mouseSensitivity = 1f;
     private Vector3 lastMousePosition;
 
 		private Transform thisT;
@@ -146,35 +145,14 @@ namespace TDTK {
 
       if (enableMousePanning)
       {
-        if (Input.GetMouseButtonDown(0))
-        {
-          lastMousePosition = Input.mousePosition;
-        }
         if (Input.GetMouseButton(0))
         {
-          Vector3 delta = Input.mousePosition - lastMousePosition;
+          Vector3 dirHor = transform.InverseTransformDirection(direction * Vector3.right);
+          Vector3 dirVer = transform.InverseTransformDirection(direction * Vector3.forward);
 
-          Vector3 pos = Camera.main.ScreenToViewportPoint(delta);
+          thisT.Translate(dirHor * mousePanSpeed * -Input.GetAxis("Mouse X"));
+          thisT.Translate(dirVer * mousePanSpeed * -Input.GetAxis("Mouse Y"));
 
-          Vector3 move = new Vector3(pos.x * panSpeed, pos.y * panSpeed, 0);
-          transform.Translate(move, Space.Self);
-
-          //if (delta.x != 0)
-          //{
-          //  Vector3 dir = transform.InverseTransformDirection(direction * Vector3.right);
-          //  thisT.Translate(dir * panSpeed * delta.x * Input.GetAxisRaw("Horizontal"));
-          //}
-
-          //if (delta.y != 0)
-          //{
-          //  Vector3 dir = transform.InverseTransformDirection(direction * Vector3.forward);
-          //  thisT.Translate(dir * panSpeed * delta.y * Input.GetAxisRaw("Vertical"));
-          //}
-
-          // TODO delta.x and delta.y should be in global koordinates and change the global position of the camera
-
-          //thisT.Translate(delta.x * mouseSensitivity, delta.y * mouseSensitivity, 0); // only for 2D
-          //lastMousePosition = Input.mousePosition;
         }
       }
       //Vector3 mousePos=Input.mousePosition;
