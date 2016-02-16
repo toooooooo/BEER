@@ -142,6 +142,10 @@ namespace TDTK
 
             buildFinished();
 
+
+            GameObject drone = Instantiate(Resources.Load("UAV_Trident")) as GameObject;
+            drone.transform.position = new Vector3(transform.position.x, transform.position.y + GetComponent<Collider>().bounds.size.y, transform.position.z);
+
             if (reverse)
             {
                 if (onSoldE != null) onSoldE(this);
