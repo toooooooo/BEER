@@ -142,9 +142,41 @@ namespace TDTK
 
             buildFinished();
 
-
+            /*****/
             GameObject drone = Instantiate(Resources.Load("UAV_Trident")) as GameObject;
             drone.transform.position = new Vector3(transform.position.x, transform.position.y + GetComponent<Collider>().bounds.size.y, transform.position.z);
+
+            LayerMask maskTarget = 1 << LayerManager.LayerTower();
+
+            // List<UnitTower> tgtList = new List<UnitTower>();
+            Collider[] cols = Physics.OverlapSphere(thisT.position, 1000 /*GetRange()*/, maskTarget);
+            UnitTower unit = null;
+            if (cols.Length > 0)
+            {
+                for (int i = 0; i < cols.Length; i++)
+                {
+                    unit = cols[i].gameObject.GetComponent<UnitTower>();
+
+                    if(unit.transform.root != transform && unit.electricityFacility)
+                    {
+                        // Debug.Log("unit.electricityFacility=" + unit.electricityFacility);
+                        break;
+                    }
+                    
+                    // if (!unit.dead) tgtList.Add(unit);
+                }
+            }
+            
+            if(unit != null)
+            {
+                // drone.transform.LookAt(unit.transform);
+                // drone.transform.position = Vector3.MoveTowards(drone.transform.position, unit.transform.position, Time.time);
+                StartCoroutine(StartDroneFlight(unit, drone));
+            }
+
+            /******/
+
+
 
             if (reverse)
             {
@@ -156,6 +188,36 @@ namespace TDTK
                 Dead();
             }
         }
+        IEnumerator StartDroneFlight(UnitTower tower, GameObject drone)
+        {
+            // rotate drone to electric facility
+            // 
+
+
+            while (true)
+            {
+                drone.transform.LookAt(tower.transform);
+                yield return StartCoroutine(MoveObject(drone.transform, transform.position, tower.transform.position, 3.0f));
+                drone.transform.LookAt(transform);
+                yield return StartCoroutine(MoveObject(drone.transform, tower.transform.position, transform.position, 3.0f));
+            }
+
+
+            yield return null;
+        }
+
+        IEnumerator MoveObject(Transform thisTransform, Vector3 startPos, Vector3 endPos, float time)
+        {
+            var i = 0.0f;
+            var rate = 1.0f / time;
+            while (i < 1.0f)
+            {
+                i += Time.deltaTime * rate;
+                thisTransform.position = Vector3.Lerp(startPos, endPos, i);
+                yield return null;
+            }
+        }
+
         public float GetBuildProgress()
         {
             if (construction == _Construction.Constructing) return builtDuration / buildDuration;
