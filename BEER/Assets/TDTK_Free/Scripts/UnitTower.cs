@@ -143,43 +143,46 @@ namespace TDTK
             buildFinished();
 
             /*****/
-            GameObject drone = Instantiate(Resources.Load("UAV_Trident")) as GameObject;
-            drone.transform.position = new Vector3(transform.position.x, transform.position.y + GetComponent<Collider>().bounds.size.y, transform.position.z);
-
-            LayerMask maskTarget = 1 << LayerManager.LayerTower();
-
-            // List<UnitTower> tgtList = new List<UnitTower>();
-            Collider[] cols = Physics.OverlapSphere(thisT.position, 1000 /*GetRange()*/, maskTarget);
-            UnitTower unit = null;
-            if (cols.Length > 0)
+            if (electricityReciever)
             {
-                // find closest electric facility
+                GameObject drone = Instantiate(Resources.Load("UAV_Trident")) as GameObject;
+                drone.transform.position = new Vector3(transform.position.x, transform.position.y + GetComponent<Collider>().bounds.size.y, transform.position.z);
 
-                float min_d = 5000;
-                for (int i = 0; i < cols.Length; i++)
+                LayerMask maskTarget = 1 << LayerManager.LayerTower();
+
+                // List<UnitTower> tgtList = new List<UnitTower>();
+                Collider[] cols = Physics.OverlapSphere(thisT.position, 1000 /*GetRange()*/, maskTarget);
+                UnitTower unit = null;
+                if (cols.Length > 0)
                 {
-                    // if it's not electric facility skip
-                    if (!cols[i].gameObject.GetComponent<UnitTower>().electricityFacility)
-                        continue;
-                    // if it's same object skip
-                    if (cols[i].gameObject.GetComponent<UnitTower>().transform.root == transform)
-                        continue;
-                    if (Vector3.Distance(cols[i].gameObject.GetComponent<UnitTower>().transform.position, transform.position) < min_d)
-                    {
-                        min_d = Vector3.Distance(cols[i].gameObject.GetComponent<UnitTower>().transform.position, transform.position);
-                        unit = cols[i].gameObject.GetComponent<UnitTower>();
-                    }
-                }
-                
-            }
-            
-            if(unit != null)
-            {
-                // drone.transform.LookAt(unit.transform);
-                // drone.transform.position = Vector3.MoveTowards(drone.transform.position, unit.transform.position, Time.time);
-                StartCoroutine(StartDroneFlight(unit, drone));
-            }
+                    // find closest electric facility
 
+                    float min_d = 5000;
+                    for (int i = 0; i < cols.Length; i++)
+                    {
+                        // if it's not electric facility skip
+                        if (!cols[i].gameObject.GetComponent<UnitTower>().electricityFacility)
+                            continue;
+                        // if it's same object skip
+                        if (cols[i].gameObject.GetComponent<UnitTower>().transform.root == transform)
+                            continue;
+                        if (Vector3.Distance(cols[i].gameObject.GetComponent<UnitTower>().transform.position, transform.position) < min_d)
+                        {
+                            min_d = Vector3.Distance(cols[i].gameObject.GetComponent<UnitTower>().transform.position, transform.position);
+                            unit = cols[i].gameObject.GetComponent<UnitTower>();
+                        }
+                    }
+
+                }
+
+                if (unit != null)
+                {
+                    // drone.transform.LookAt(unit.transform);
+                    // drone.transform.position = Vector3.MoveTowards(drone.transform.position, unit.transform.position, Time.time);
+                    StartCoroutine(StartDroneFlight(unit, drone, new Vector3(transform.position.x, transform.position.y + GetComponent<Collider>().transform.position.y, transform.position.z),
+                        new Vector3(unit.transform.position.x, unit.transform.position.y + unit.GetComponent<Collider>().transform.position.y, unit.transform.position.z)));
+                }
+            }
             /******/
 
 
@@ -194,16 +197,17 @@ namespace TDTK
                 Dead();
             }
         }
-        IEnumerator StartDroneFlight(UnitTower tower, GameObject drone)
+        IEnumerator StartDroneFlight(UnitTower tower, GameObject drone, Vector3 point_A, Vector3 point_B)
         {
             // rotate drone to electric facility
             // 
             while (true)
             {
                 drone.transform.LookAt(tower.transform);
-                yield return StartCoroutine(MoveObject(drone.transform, transform.position, tower.transform.position, 3.0f));
+
+                yield return StartCoroutine(MoveObject(drone.transform, point_A, point_B, 3.0f));
                 drone.transform.LookAt(transform);
-                yield return StartCoroutine(MoveObject(drone.transform, tower.transform.position, transform.position, 3.0f));
+                yield return StartCoroutine(MoveObject(drone.transform, point_B, point_A, 3.0f));
             }
         }
 
