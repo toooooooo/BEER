@@ -153,18 +153,24 @@ namespace TDTK
             UnitTower unit = null;
             if (cols.Length > 0)
             {
+                // find closest electric facility
+
+                float min_d = 5000;
                 for (int i = 0; i < cols.Length; i++)
                 {
-                    unit = cols[i].gameObject.GetComponent<UnitTower>();
-
-                    if(unit.transform.root != transform && unit.electricityFacility)
+                    // if it's not electric facility skip
+                    if (!cols[i].gameObject.GetComponent<UnitTower>().electricityFacility)
+                        continue;
+                    // if it's same object skip
+                    if (cols[i].gameObject.GetComponent<UnitTower>().transform.root == transform)
+                        continue;
+                    if (Vector3.Distance(cols[i].gameObject.GetComponent<UnitTower>().transform.position, transform.position) < min_d)
                     {
-                        // Debug.Log("unit.electricityFacility=" + unit.electricityFacility);
-                        break;
+                        min_d = Vector3.Distance(cols[i].gameObject.GetComponent<UnitTower>().transform.position, transform.position);
+                        unit = cols[i].gameObject.GetComponent<UnitTower>();
                     }
-                    
-                    // if (!unit.dead) tgtList.Add(unit);
                 }
+                
             }
             
             if(unit != null)
@@ -192,8 +198,6 @@ namespace TDTK
         {
             // rotate drone to electric facility
             // 
-
-
             while (true)
             {
                 drone.transform.LookAt(tower.transform);
@@ -201,9 +205,6 @@ namespace TDTK
                 drone.transform.LookAt(transform);
                 yield return StartCoroutine(MoveObject(drone.transform, tower.transform.position, transform.position, 3.0f));
             }
-
-
-            yield return null;
         }
 
         IEnumerator MoveObject(Transform thisTransform, Vector3 startPos, Vector3 endPos, float time)
