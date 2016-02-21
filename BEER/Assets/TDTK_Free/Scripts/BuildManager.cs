@@ -500,8 +500,11 @@ namespace TDTK
 
                     if (unit == null || min_d > unit.GetRange())
                     {
+                        // set electricity source for tower weapon
                         return "There is not enough electricity";
                     }
+                    else
+                        tower.electricitySource = unit;
                 }
             }
             /***/
