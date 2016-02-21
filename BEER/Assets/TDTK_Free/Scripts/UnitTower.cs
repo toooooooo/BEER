@@ -13,6 +13,16 @@ namespace TDTK
 
     public class UnitTower : Unit
     {
+        // last energy reciever tower that is being build thus expectung to find coresponding energy source
+        public static UnitTower lastBuiltEnergyRecieverTower;
+
+        private UnitTower energyProducer;
+        public UnitTower EnergyProducer
+        {
+            get { return this.energyProducer; }
+            set { this.energyProducer = value; }
+        }
+
 
         private PlatformTD platform;
         public PlatformTD Platform
@@ -142,48 +152,12 @@ namespace TDTK
 
             buildFinished();
 
-            /*****/
+            /****
             if (electricityReciever)
             {
-                GameObject drone = Instantiate(Resources.Load("UAV_Trident")) as GameObject;
-                drone.transform.position = new Vector3(transform.position.x, transform.position.y + GetComponent<Collider>().bounds.size.y, transform.position.z);
-
-                LayerMask maskTarget = 1 << LayerManager.LayerTower();
-
-                // List<UnitTower> tgtList = new List<UnitTower>();
-                Collider[] cols = Physics.OverlapSphere(thisT.position, 1000 /*GetRange()*/, maskTarget);
-                UnitTower unit = null;
-                if (cols.Length > 0)
-                {
-                    // find closest electric facility
-
-                    float min_d = 5000;
-                    for (int i = 0; i < cols.Length; i++)
-                    {
-                        // if it's not electric facility skip
-                        if (!cols[i].gameObject.GetComponent<UnitTower>().electricityFacility)
-                            continue;
-                        // if it's same object skip
-                        if (cols[i].gameObject.GetComponent<UnitTower>().transform.root == transform)
-                            continue;
-                        if (Vector3.Distance(cols[i].gameObject.GetComponent<UnitTower>().transform.position, transform.position) < min_d)
-                        {
-                            min_d = Vector3.Distance(cols[i].gameObject.GetComponent<UnitTower>().transform.position, transform.position);
-                            unit = cols[i].gameObject.GetComponent<UnitTower>();
-                        }
-                    }
-
-                }
-
-                if (unit != null)
-                {
-                    // drone.transform.LookAt(unit.transform);
-                    // drone.transform.position = Vector3.MoveTowards(drone.transform.position, unit.transform.position, Time.time);
-                    StartCoroutine(StartDroneFlight(unit, drone, new Vector3(transform.position.x, transform.position.y + GetComponent<Collider>().transform.position.y, transform.position.z),
-                        new Vector3(unit.transform.position.x, unit.transform.position.y + unit.GetComponent<Collider>().transform.position.y, unit.transform.position.z)));
-                }
+                lastBuiltEnergyRecieverTower = this;
             }
-            /******/
+            ******/
 
 
 
@@ -197,17 +171,70 @@ namespace TDTK
                 Dead();
             }
         }
+
+        private GameObject drone;
+        IEnumerator droneCorutineHndl;
+
+        public void startDroneFlight(UnitTower electricitySource)
+        {
+            if (droneCorutineHndl != null)
+            {
+                StopCoroutine(droneCorutineHndl);
+                if (moveObjectHndl != null) StopCoroutine(moveObjectHndl);
+                Destroy(drone);
+            }
+            
+            drone = Instantiate(Resources.Load("UAV_Trident")) as GameObject;
+            drone.transform.position = new Vector3(transform.position.x, transform.position.y + GetComponent<Collider>().bounds.size.y, transform.position.z);
+            droneCorutineHndl = StartDroneFlight(electricitySource, drone, new Vector3(transform.position.x, transform.position.y + GetComponent<Collider>().transform.position.y, transform.position.z),
+                new Vector3(electricitySource.transform.position.x, electricitySource.transform.position.y + electricitySource.GetComponent<Collider>().transform.position.y, electricitySource.transform.position.z));
+            StartCoroutine(droneCorutineHndl);
+        }
+
+
+        private IEnumerator moveObjectHndl;
         IEnumerator StartDroneFlight(UnitTower tower, GameObject drone, Vector3 point_A, Vector3 point_B)
         {
             // rotate drone to electric facility
             // 
+            float electricity_taken = 0f;
             while (true)
             {
+                // look at electricity source (windmill...)
                 drone.transform.LookAt(tower.transform);
+                // fly to it
+                moveObjectHndl = MoveObject(drone.transform, point_A, point_B, 3.0f);
+                yield return StartCoroutine(moveObjectHndl);
 
-                yield return StartCoroutine(MoveObject(drone.transform, point_A, point_B, 3.0f));
+                // take energy from electricty source
+                if (tower.currentElectricity - electricityRegenerationRate < 0)
+                {
+                    electricity_taken = 0;
+                }
+                else
+                {
+                    electricity_taken = electricityRegenerationRate;
+                    tower.currentElectricity -= electricityRegenerationRate;
+                }
+
+                // turn back
                 drone.transform.LookAt(transform);
-                yield return StartCoroutine(MoveObject(drone.transform, point_B, point_A, 3.0f));
+
+                moveObjectHndl = MoveObject(drone.transform, point_B, point_A, 3.0f);
+                // fly back
+                yield return StartCoroutine(moveObjectHndl);
+
+                // drone "delivered" energy
+                currentElectricity += electricity_taken;
+                // if (electricity_taken != 0)
+                // {
+                    // new TextOverlay(thisT.position, "+" + electricity_taken.ToString(), new Color(0f, 1f, 0f, 1f));
+                // }
+                // else
+                // {
+                    // new TextOverlay(thisT.position, "+" + electricity_taken.ToString(), new Color(1f, 0f, 0f, 1f));
+                // }
+
             }
         }
 
@@ -220,6 +247,25 @@ namespace TDTK
                 i += Time.deltaTime * rate;
                 thisTransform.position = Vector3.Lerp(startPos, endPos, i);
                 yield return null;
+            }
+        }
+
+        void OnMouseDown()
+        {
+            if(lastBuiltEnergyRecieverTower == null && electricityReciever)
+            {
+                Debug.Log("setting dron start point");
+                lastBuiltEnergyRecieverTower = this;
+            }
+
+            Debug.Log((lastBuiltEnergyRecieverTower != null) + " " + electricityFacility);
+
+            if(lastBuiltEnergyRecieverTower != null && electricityFacility)
+            {
+                Debug.Log("sending drone to the new destination");
+                lastBuiltEnergyRecieverTower.energyProducer = this;
+                lastBuiltEnergyRecieverTower.startDroneFlight(this);
+                lastBuiltEnergyRecieverTower = null;
             }
         }
 
@@ -240,7 +286,7 @@ namespace TDTK
             else if (electricityReciever)
             {
                 UIOverlay.NewElectricityReciever(this);
-                StartCoroutine(GenerateEnergyRoutine(this));
+                // StartCoroutine(GenerateEnergyRoutine(this));
             }
             // new TextOverlay(thisT.position, "100", new Color(0f, 1f, .4f, 1f));
             // if (onDamagedE != null) onDamagedE(this);
