@@ -359,9 +359,13 @@ namespace TDTK {
 		
 		public delegate float PlayShootAnimation();
 		public PlayShootAnimation playShootAnimation;
-		
-		
-		public IEnumerator TurretRoutine(){
+
+        public UnitTower electricitySource;
+
+        public float electricityNeedForShoot = 0.1f;
+
+
+        public IEnumerator TurretRoutine(){
 			for(int i=0; i<shootPoints.Count; i++){
 				if(shootPoints[i]==null){ shootPoints.RemoveAt(i);	i-=1;	}
 			}
@@ -378,7 +382,17 @@ namespace TDTK {
 			yield return null;
 			
 			while(true){
-				while(target==null || stunned || IsInConstruction() || !targetInLOS) yield return null;
+
+                // disable shooting while there is no electricity
+                while (electricitySource != null && electricitySource.currentElectricity - electricityNeedForShoot < 0) yield return null;
+
+                // target will shote so take that energy
+                if(electricitySource != null)
+                    electricitySource.currentElectricity -= electricityNeedForShoot;
+
+
+
+                while (target==null || stunned || IsInConstruction() || !targetInLOS) yield return null;
 				
 				Unit currentTarget=target;
 				
