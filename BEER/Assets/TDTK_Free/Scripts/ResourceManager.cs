@@ -11,11 +11,17 @@ namespace TDTK {
 		
 		public delegate void RscChangedHandler(List<int> changedValue);
 		public static event RscChangedHandler onRscChangedE;
-		
-		public bool enableRscGen=false;
+
+
+        public delegate void ScoreChangedHandler(int changedValue);
+        public static event ScoreChangedHandler onScoreChangedE;
+
+        public bool enableRscGen=false;
 		public List<float> rscGenRateList=new List<float>();
 		
 		public List<Rsc> rscList=new List<Rsc>();
+
+        public int scoreCount;
 		
 		public static ResourceManager instance;
 		
@@ -42,6 +48,7 @@ namespace TDTK {
 			}
 			
 			rscList=rscL;
+            scoreCount = 0;
 			
 			if(enableRscGen) StartCoroutine(RscGenRoutine());
 		}
@@ -109,6 +116,18 @@ namespace TDTK {
 			
 			if(onRscChangedE!=null) onRscChangedE(rscL);
 		}
+
+        public static void AddScore(int addBy)
+        {
+            instance._AddScore(addBy);
+        }
+        public void _AddScore(int addBy)
+        {
+            scoreCount += addBy;
+
+
+            if (onScoreChangedE != null) onScoreChangedE(scoreCount);
+        }
 		
 		
 		

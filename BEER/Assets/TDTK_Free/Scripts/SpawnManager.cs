@@ -310,6 +310,7 @@ namespace TDTK
         }
 
         public static int GetCurrentWaveID() { return instance.currentWaveID; }
+        public static int GetCurrentWaveScore() { return instance.currentWaveID != -1 ? instance.waveList[instance.currentWaveID].scoreGain : 0; }
     }
 
 }
