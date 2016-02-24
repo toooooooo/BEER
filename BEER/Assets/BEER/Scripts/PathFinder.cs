@@ -57,14 +57,24 @@ namespace BEERPath
 
         PathNode node = this.nodes[x, y];
 
+
+        // check if tower is not walkable or already in the path
         if (!node.Walkable || node.State == PathNodeState.Included)
           continue;
+
+        // Check if path goes between 2 towers
+        if (x != currentNode.Location.X && y != currentNode.Location.Y)
+        {
+          if (!this.nodes[x, currentNode.Location.Y].Walkable || !this.nodes[currentNode.Location.X, y].Walkable)
+            continue;
+        }
 
         if (node.State == PathNodeState.Possible)
         {
           float cost = PathNode.GetCost(node.Location, node.ParentNode.Location);
           float tmp = currentNode.CostFromStart + cost;
 
+          // Nodes are only added to the list if their cost is lower going via this route
           if (tmp < node.CostFromStart)
           {
             node.ParentNode = currentNode;
@@ -73,6 +83,7 @@ namespace BEERPath
         }
         else
         {
+          // Untested node -> set parent and consider it for the path
           node.ParentNode = currentNode;
           node.State = PathNodeState.Possible;
           walkables.Add(node);
@@ -85,10 +96,14 @@ namespace BEERPath
     {
       return new Point[]
       {
-                new Point(location.X - 1, location.Y),
-                new Point(location.X + 1, location.Y),
-                new Point(location.X, location.Y - 1),
-                new Point(location.X, location.Y + 1)
+                new Point(location.X-1, location.Y-1),
+                new Point(location.X-1, location.Y  ),
+                new Point(location.X-1, location.Y+1),
+                new Point(location.X,   location.Y+1),
+                new Point(location.X+1, location.Y+1),
+                new Point(location.X+1, location.Y  ),
+                new Point(location.X+1, location.Y-1),
+                new Point(location.X,   location.Y-1)
       };
     }
 
