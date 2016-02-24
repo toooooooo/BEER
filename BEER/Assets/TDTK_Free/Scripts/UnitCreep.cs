@@ -194,6 +194,7 @@ namespace TDTK
                 rscGain.Add(Random.Range(valueRscMin[i], valueRscMax[i]));
             }
             ResourceManager.GainResource(rscGain);
+            ResourceManager.AddScore(scoreValue);
 
             if (aniInstance != null) { return aniInstance.PlayDead(); }
 

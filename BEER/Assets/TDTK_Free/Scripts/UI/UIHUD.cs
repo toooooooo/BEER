@@ -14,6 +14,7 @@ namespace TDTK {
 		public Text txtWave;
 		
 		public Text txtTimer;
+        public Text txtScore;
 		public UnityButton buttonSpawn;
 		
 		public List<UnityButton> rscObjList=new List<UnityButton>();
@@ -35,6 +36,7 @@ namespace TDTK {
 			OnLife(0);
 			OnNewWave(1);
 			OnResourceChanged(new List<int>());
+            OnScoreChanged(0);
 			
 			if(SpawnManager.AutoStart()){
 				buttonSpawn.rootObj.SetActive(false);
@@ -51,6 +53,7 @@ namespace TDTK {
 			SpawnManager.onSpawnTimerE += OnSpawnTimer;
 			
 			ResourceManager.onRscChangedE += OnResourceChanged;
+            ResourceManager.onScoreChangedE += OnScoreChanged;
 		}
 		void OnDisable(){
 			GameControl.onLifeE -= OnLife;
@@ -60,7 +63,8 @@ namespace TDTK {
 			SpawnManager.onSpawnTimerE -= OnSpawnTimer;
 			
 			ResourceManager.onRscChangedE -= OnResourceChanged;
-		}
+            ResourceManager.onScoreChangedE -= OnScoreChanged;
+        }
 		
 		void OnLife(int changedvalue){
 			int cap=GameControl.GetPlayerLifeCap();
@@ -81,16 +85,24 @@ namespace TDTK {
 				rscObjList[i].label.text=rscList[i].value.ToString();
 			}
 		}
-		
-		public void OnSpawnButton(){
+
+        void OnScoreChanged(int valueChanged)
+        {
+            txtScore.text = "Score: " + valueChanged;
+        }
+
+        public void OnSpawnButton(){
 			//if(FPSControl.IsOn()) return;
 			
 			timerDuration=0;
+
+            ResourceManager.AddScore(SpawnManager.GetCurrentWaveScore());
 			
 			SpawnManager.Spawn();
 			buttonSpawn.rootObj.SetActive(false);
 			
 			buttonSpawn.label.text="Next Wave";
+            
 		}
 		
 		void OnEnableSpawn(){
