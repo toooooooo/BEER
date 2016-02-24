@@ -1,17 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TowerHighlighter : MonoBehaviour {
+public class TowerHighlighter : MonoBehaviour
+{
 
   private Color startcolor;
   private MeshRenderer MyRenderer;
 
   // Use this for initialization
-  void Start () {
+  void Start()
+  {
     MyRenderer = GetComponentInChildren<MeshRenderer>();
   }
 
-  
+
   void OnMouseEnter()
   {
     startcolor = MyRenderer.material.color;
