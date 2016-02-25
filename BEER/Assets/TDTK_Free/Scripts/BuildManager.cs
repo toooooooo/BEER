@@ -473,7 +473,7 @@ namespace TDTK
 
             /***/
             // check if there's energy reciving tower
-            if (!tower.electricityReciever && !tower.electricityFacility)
+            if (tower.electricityNeeded && !tower.electricityReciever && !tower.electricityFacility)
             {
                 LayerMask maskTarget = 1 << LayerManager.LayerTower();
 
