@@ -89,6 +89,9 @@ namespace TDTK
     public bool electricityReciever = false;
     public float currentSpendingRate = 0.02f;
 
+    public UnitTower electricitySource;
+    public float electricityNeedForShoot = 0.1f;
+
     //public int level=1;
 
     public int currentActiveStat = 0;
@@ -146,6 +149,9 @@ namespace TDTK
       }
     }
 
+    private MeshRenderer[] myRenderers;
+    private List<Color> myRenderersColors;
+
     public void Init()
     {
       dead = false;
@@ -162,6 +168,8 @@ namespace TDTK
       ResetBuff();
       ResetSlow();
 
+      myRenderers = GetComponentsInChildren<MeshRenderer>();
+      myRenderersColors = new List<Color>(myRenderers.Length);
       //if(onNewUnitE!=null) onNewUnitE(this);
     }
 
@@ -421,11 +429,6 @@ namespace TDTK
     public delegate float PlayShootAnimation();
     public PlayShootAnimation playShootAnimation;
 
-    public UnitTower electricitySource;
-
-    public float electricityNeedForShoot = 0.1f;
-
-
     public IEnumerator TurretRoutine()
     {
       for (int i = 0; i < shootPoints.Count; i++)
@@ -450,9 +453,26 @@ namespace TDTK
       {
 
         // disable shooting while there is no electricity
-        while (electricitySource != null && electricitySource.currentElectricity - electricityNeedForShoot < 0) yield return null;
+        while (electricitySource != null && electricitySource.currentElectricity - electricityNeedForShoot < 0)
+        {
+          // Paint deactivated towers black
+          for (int i = 0; i < myRenderers.Length; i++)
+          {
+            myRenderersColors.Add(myRenderers[i].material.color);
+            myRenderers[i].material.color = new Color(0.2f, 0.2f, 0.2f);
+          }
+          
+          yield return null;
+        }
 
-        // target will shote so take that energy
+        for (int i = 0; i < myRenderers.Length; i++)
+        {
+          myRenderers[i].material.color = myRenderersColors[i];
+        }
+        // TODO better way to safe the colors
+        myRenderersColors.Clear();
+
+        // target will shoot so take that energy
         if (electricitySource != null)
           electricitySource.currentElectricity -= electricityNeedForShoot;
 
@@ -782,6 +802,8 @@ namespace TDTK
     public Slow GetSlow() { return stats[currentActiveStat].slow; }
     public Dot GetDot() { return stats[currentActiveStat].dot; }
 
+    public float GetMaxElectricity() { return maxElectricity; }
+    public float GetElectricityRegenerationRate() { return electricityRegenerationRate; }
 
 
 
@@ -864,6 +886,11 @@ namespace TDTK
           }
           text += "\nRegen " + regenValue.ToString("f0") + "HP every " + regenDuration.ToString("f0") + "s";
         }
+      }
+      else if (tower.type == _TowerType.Electric)
+      {
+        if (maxElectricity > 0) text += "Max electricity stored: " + maxElectricity.ToString();
+        if (electricityRegenerationRate > 0) text += "\nElectricity generated: " + electricityRegenerationRate.ToString();
       }
 
       return text;

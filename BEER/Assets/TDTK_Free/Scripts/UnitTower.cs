@@ -7,7 +7,7 @@ using TDTK;
 namespace TDTK
 {
 
-  public enum _TowerType { Turret, AOE, Support }
+  public enum _TowerType { Turret, AOE, Support, Electric }
   public enum _TargetMode { Hybrid, Air, Ground }
 
 
@@ -109,6 +109,10 @@ namespace TDTK
       if (type == _TowerType.Support)
       {
         StartCoroutine(SupportRoutine());
+      }
+      if (type == _TowerType.Electric)
+      {
+        // TODO: Coroutine for electric towers here
       }
     }
 
