@@ -252,7 +252,7 @@ namespace TDTK {
 			Update();
 			
 			txtName.text=tower.unitName;
-			txtLvl.text="lvl"+tower.GetLevel();
+			txtLvl.text="lvl "+tower.GetLevel();
 			txtDesp1.text=tower.GetDespStats();
 			txtDesp2.text=tower.GetDespGeneral();
 			
