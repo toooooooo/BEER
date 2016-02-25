@@ -235,7 +235,13 @@ namespace TDTK {
 				else{
 					butUpgrade.SetActive(false);
 				}
-			}
+
+        // deactivate the priority settings for support and electricity towers
+        if (tower.type != _TowerType.Turret)
+        {
+          priorityObj.SetActive(false);
+        }
+      }
 			else{
 				List<int> cost=currentTower.GetCost();
 				for(int i=0; i<rscObjList.Count; i++){
