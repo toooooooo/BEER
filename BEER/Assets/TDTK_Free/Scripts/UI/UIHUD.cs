@@ -18,6 +18,8 @@ namespace TDTK {
 		public UnityButton buttonSpawn;
 		
 		public List<UnityButton> rscObjList=new List<UnityButton>();
+
+        public GameObject storyObj;
 		
 		
 		// Use this for initialization
@@ -43,6 +45,8 @@ namespace TDTK {
 				//StartCoroutine(AutoStartTimer());
 				OnSpawnTimer(SpawnManager.GetAutoStartDelay());
 			}
+
+            storyObj.SetActive(true);
 		}
 		
 		void OnEnable(){
@@ -143,6 +147,11 @@ namespace TDTK {
 				UIPauseMenu.Show();
 			}
 		}
-	}
+
+        public void OnCloseStoryButton()
+        {
+            storyObj.SetActive(false);
+        }
+    }
 
 }
