@@ -310,8 +310,12 @@ namespace TDTK {
 				cont=new GUIContent("Cooldown:", "Duration between each attack");
 				EditorGUI.LabelField(new Rect(startX, startY+=spaceY, width, height), cont);
 				stat.cooldown=EditorGUI.FloatField(new Rect(startX+spaceX, startY, fWidth, height), stat.cooldown);
-				
-				/*
+
+        cont = new GUIContent("Electricity needed:", "The amount of enery consumed for one shot");
+        EditorGUI.LabelField(new Rect(startX, startY += spaceY, width, height), cont);
+        tower.electricityNeedForShoot = EditorGUI.FloatField(new Rect(startX + spaceX, startY, fWidth, height), tower.electricityNeedForShoot);
+
+        /*
 				cont=new GUIContent("Clip Size:", "The amount of attack the unit can do before the unit needs to reload\nWhen set to <0 the unit will never need any reload");
 				EditorGUI.LabelField(new Rect(startX, startY+=spaceY, width, height), cont);
 				stat.clipSize=EditorGUI.FloatField(new Rect(startX+spaceX, startY, fWidth, height), stat.clipSize);
@@ -322,9 +326,9 @@ namespace TDTK {
 				EditorGUI.LabelField(new Rect(startX, startY+=spaceY, width, height), cont);
 				stat.reloadDuration=EditorGUI.FloatField(new Rect(startX+spaceX, startY, fWidth, height), stat.reloadDuration);
 				*/
-				
-				
-				cont=new GUIContent("Range:", "Effect range of the unit");
+
+
+        cont =new GUIContent("Range:", "Effect range of the unit");
 				EditorGUI.LabelField(new Rect(startX, startY+=spaceY, width, height), cont);
 				stat.range=EditorGUI.FloatField(new Rect(startX+spaceX, startY, fWidth, height), stat.range);
 				
@@ -422,10 +426,25 @@ namespace TDTK {
 				EditorGUI.LabelField(new Rect(startX, startY+=spaceY, width, height), cont);
 				stat.buff.regenHP=EditorGUI.FloatField(new Rect(startX+spaceX, startY, fWidth, height), stat.buff.regenHP);
 			}
-			
-			
-			
-			if(tower){
+
+      if ((tower && tower.type == _TowerType.Electric))
+      {
+        cont = new GUIContent("Range:", "Effect range of the unit");
+        EditorGUI.LabelField(new Rect(startX, startY += spaceY, width, height), cont);
+        stat.range = EditorGUI.FloatField(new Rect(startX + spaceX, startY, fWidth, height), stat.range);
+
+        cont = new GUIContent("Max Electricity:", "Maximal energy capacity of the electric facility.");
+        EditorGUI.LabelField(new Rect(startX, startY += spaceY, width, height), cont);
+        tower.maxElectricity = EditorGUI.FloatField(new Rect(startX + spaceX, startY, fWidth, height), tower.maxElectricity);
+
+        cont = new GUIContent("Elec. Regeneration:", "The ..");
+        EditorGUI.LabelField(new Rect(startX, startY += spaceY, width, height), cont);
+        tower.electricityRegenerationRate = EditorGUI.FloatField(new Rect(startX + spaceX, startY, fWidth, height), tower.electricityRegenerationRate);
+      }
+
+
+
+      if (tower){
 				startY+=10;
 				cont=new GUIContent("Custom Description:", "Check to use use custom description. If not, the default one (generated based on the effect) will be used");
 				EditorGUI.LabelField(new Rect(startX, startY+=spaceY, width, height), cont);
