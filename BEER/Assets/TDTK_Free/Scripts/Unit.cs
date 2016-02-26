@@ -169,7 +169,11 @@ namespace TDTK
       ResetSlow();
 
       myRenderers = GetComponentsInChildren<MeshRenderer>();
-      myRenderersColors = new List<Color>(myRenderers.Length);
+      myRenderersColors = new List<Color>(myRenderers.Length);    
+      for (int i = 0; i < myRenderers.Length; i++)
+      {
+        myRenderersColors.Add(myRenderers[i].material.color);
+      }
       //if(onNewUnitE!=null) onNewUnitE(this);
     }
 
@@ -458,19 +462,17 @@ namespace TDTK
           // Paint deactivated towers black
           for (int i = 0; i < myRenderers.Length; i++)
           {
-            myRenderersColors.Add(myRenderers[i].material.color);
             myRenderers[i].material.color = new Color(0.2f, 0.2f, 0.2f);
           }
           
           yield return null;
         }
 
+        // Restore original color
         for (int i = 0; i < myRenderers.Length; i++)
         {
           myRenderers[i].material.color = myRenderersColors[i];
         }
-        // TODO better way to safe the colors
-        myRenderersColors.Clear();
 
         // target will shoot so take that energy
         if (electricitySource != null)
