@@ -44,7 +44,16 @@ namespace BEERPath
     private List<PathNode> GetWalkableNodes(PathNode currentNode)
     {
       List<PathNode> walkables = new List<PathNode>();
-      IEnumerable<Point> nextLocations = GetAdjacentLocations(currentNode.Location);
+      IEnumerable<Point> nextLocations;
+
+      if (currentNode.Location.Y == 1)
+      {
+        nextLocations = new Point[] { new Point(destinationNode.Location.X, destinationNode.Location.Y) };
+      }
+      else
+      {
+        nextLocations = GetAdjacentLocations(currentNode.Location);
+      }
 
       foreach (Point location in nextLocations)
       {
@@ -63,7 +72,7 @@ namespace BEERPath
           continue;
 
         // Check if path goes between 2 towers
-        if (x != currentNode.Location.X && y != currentNode.Location.Y)
+        if (x != currentNode.Location.X && y != currentNode.Location.Y && y != 0)
         {
           if (!this.nodes[x, currentNode.Location.Y].Walkable || !this.nodes[currentNode.Location.X, y].Walkable)
             continue;
