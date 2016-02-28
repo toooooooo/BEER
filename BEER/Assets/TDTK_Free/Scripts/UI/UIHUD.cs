@@ -28,6 +28,7 @@ namespace TDTK {
         int animateDirectory = 1; // 1.. out, -1 in
         float cumulativeTime = 0.0f;
         float xDelta = 0.0f;
+        float defaultX;
 
         RectTransform storyRect;
 		
@@ -59,6 +60,7 @@ namespace TDTK {
 
             storyRect = storyObj.GetComponent<RectTransform>();
             storyRect.Translate(0, 0, 0);
+            defaultX = storyRect.position.x;
 
             storyObj.SetActive(true);
             storyAudio.Play();
@@ -162,7 +164,7 @@ namespace TDTK {
                 }
                 else
                 {
-                    if(storyRect.position.x > 478f)
+                    if(storyRect.position.x > defaultX)
                     {
                         storyRect.Translate(-xDelta, 0, 0);
                     }
