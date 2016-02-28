@@ -504,6 +504,8 @@ namespace TDTK
                         return "There is not enough electricity";
                     }
                 }
+                else
+                    return "There is not enough electricity";
             }
             /***/
 
