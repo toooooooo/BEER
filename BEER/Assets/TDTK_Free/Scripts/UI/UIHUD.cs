@@ -21,6 +21,8 @@ namespace TDTK {
 
         public GameObject storyObj;
 
+        public AudioSource storyAudio;
+
 
         bool animateStory = false;
         int animateDirectory = 1; // 1.. out, -1 in
@@ -58,8 +60,8 @@ namespace TDTK {
             storyRect = storyObj.GetComponent<RectTransform>();
             storyRect.Translate(0, 0, 0);
 
-
             storyObj.SetActive(true);
+            storyAudio.Play();
         }
 		
 		void OnEnable(){
@@ -112,6 +114,8 @@ namespace TDTK {
             //if(FPSControl.IsOn()) return;
             
             storyObj.SetActive(false);
+
+            storyAudio.Stop();
 
             timerDuration =0;
 
