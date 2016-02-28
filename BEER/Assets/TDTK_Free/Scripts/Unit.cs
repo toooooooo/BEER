@@ -168,11 +168,14 @@ namespace TDTK
       ResetBuff();
       ResetSlow();
 
-      myRenderers = GetComponentsInChildren<MeshRenderer>();
-      myRenderersColors = new List<Color>(myRenderers.Length);    
-      for (int i = 0; i < myRenderers.Length; i++)
+      if (!this.IsCreep())
       {
-        myRenderersColors.Add(myRenderers[i].material.color);
+        myRenderers = GetComponentsInChildren<MeshRenderer>();
+        myRenderersColors = new List<Color>(myRenderers.Length);
+        for (int i = 0; i < myRenderers.Length; i++)
+        {
+          myRenderersColors.Add(myRenderers[i].material.color);
+        }
       }
       //if(onNewUnitE!=null) onNewUnitE(this);
     }
@@ -464,7 +467,7 @@ namespace TDTK
           {
             myRenderers[i].material.color = new Color(0.2f, 0.2f, 0.2f);
           }
-          
+
           yield return null;
         }
 

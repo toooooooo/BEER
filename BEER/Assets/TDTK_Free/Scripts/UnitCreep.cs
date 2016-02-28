@@ -24,8 +24,8 @@ namespace TDTK
         public List<int> valueRscMax = new List<int>();
         public int valueEnergyGain = 0;
 
-        //public float flightHeight=1.5f;
-        //private Vector3 flightHeightOffset;
+        public float flightHeight=2f;
+        private Vector3 flightHeightOffset;
         private Vector3 pathDynamicOffset;
         public Vector3 GetPathDynamicOffset() { return pathDynamicOffset; }
 
@@ -35,7 +35,7 @@ namespace TDTK
 
             base.Awake();
 
-            //if(flying) flightHeightOffset=new Vector3(0, flightHeight, 0);
+            if(flying) flightHeightOffset=new Vector3(0, flightHeight, 0);
 
             if (thisObj.GetComponent<Collider>() == null)
             {
@@ -133,7 +133,7 @@ namespace TDTK
         {
             //this is for dynamic waypoint, each unit creep have it's own offset pos
             //point+=dynamicOffset;
-            point += pathDynamicOffset;//+flightHeightOffset;
+            point += pathDynamicOffset + flightHeightOffset;
 
             float dist = Vector3.Distance(point, thisT.position);
 
