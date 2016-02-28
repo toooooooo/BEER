@@ -282,7 +282,9 @@ namespace TDTK
 
         public void ClearTowerHighlighter()
         {
-            GetComponent<TowerHighlighter>().Clear();
+            TowerHighlighter th = GetComponent<TowerHighlighter>();
+            if(th != null)
+                th.Clear();
         }
 
     public float GetBuildProgress()
