@@ -1,26 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class TowerHighlighter : MonoBehaviour
 {
 
-  private Color startcolor;
-  private MeshRenderer MyRenderer;
+  private List<Color> myRenderersColors;
+  private MeshRenderer[] myRenderers;
 
   // Use this for initialization
   void Start()
   {
-    MyRenderer = GetComponentInChildren<MeshRenderer>();
+    myRenderers = GetComponentsInChildren<MeshRenderer>();
+    myRenderersColors = new List<Color>(myRenderers.Length);
+    for (int i = 0; i < myRenderers.Length; i++)
+    {
+      myRenderersColors.Add(myRenderers[i].material.color);
+    }
   }
 
 
   void OnMouseEnter()
   {
-    startcolor = MyRenderer.material.color;
-    MyRenderer.material.color = Color.yellow;
+    for (int i = 0; i < myRenderers.Length; i++)
+    {
+      myRenderers[i].material.color = Color.yellow;
+    }
   }
   void OnMouseExit()
   {
-    MyRenderer.material.color = startcolor;
+    for (int i = 0; i < myRenderers.Length; i++)
+    {
+      myRenderers[i].material.color = myRenderersColors[i];
+    }
   }
 }
