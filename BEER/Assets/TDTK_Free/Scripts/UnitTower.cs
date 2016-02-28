@@ -256,9 +256,13 @@ namespace TDTK
 
     void OnMouseDown()
     {
-      if (lastBuiltEnergyRecieverTower == null && electricityReciever)
+      if (/*lastBuiltEnergyRecieverTower == null &&*/ electricityReciever)
       {
-        Debug.Log("setting dron start point");
+                if(lastBuiltEnergyRecieverTower!= null)
+                {
+                    lastBuiltEnergyRecieverTower.ClearTowerHighlighter();
+                }
+                //Debug.Log("setting dron start point");
         lastBuiltEnergyRecieverTower = this;
       }
 
@@ -269,9 +273,17 @@ namespace TDTK
         Debug.Log("sending drone to the new destination");
         lastBuiltEnergyRecieverTower.energyProducer = this;
         lastBuiltEnergyRecieverTower.startDroneFlight(this);
+        lastBuiltEnergyRecieverTower.ClearTowerHighlighter();
         lastBuiltEnergyRecieverTower = null;
+
+        
       }
     }
+
+        public void ClearTowerHighlighter()
+        {
+            GetComponent<TowerHighlighter>().Clear();
+        }
 
     public float GetBuildProgress()
     {
