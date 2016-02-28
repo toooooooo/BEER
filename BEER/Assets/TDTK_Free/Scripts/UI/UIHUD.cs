@@ -20,6 +20,14 @@ namespace TDTK {
 		public List<UnityButton> rscObjList=new List<UnityButton>();
 
         public GameObject storyObj;
+
+
+        bool animateStory = false;
+        int animateDirectory = 1; // 1.. out, -1 in
+        float cumulativeTime = 0.0f;
+        float xDelta = 0.0f;
+
+        RectTransform storyRect;
 		
 		
 		// Use this for initialization
@@ -46,8 +54,13 @@ namespace TDTK {
 				OnSpawnTimer(SpawnManager.GetAutoStartDelay());
 			}
 
+
+            storyRect = storyObj.GetComponent<RectTransform>();
+            storyRect.Translate(0, 0, 0);
+
+
             storyObj.SetActive(true);
-		}
+        }
 		
 		void OnEnable(){
 			GameControl.onLifeE += OnLife;
@@ -96,9 +109,11 @@ namespace TDTK {
         }
 
         public void OnSpawnButton(){
-			//if(FPSControl.IsOn()) return;
-			
-			timerDuration=0;
+            //if(FPSControl.IsOn()) return;
+            
+            storyObj.SetActive(false);
+
+            timerDuration =0;
 
             ResourceManager.AddScore(SpawnManager.GetCurrentWaveScore());
 			
@@ -122,6 +137,38 @@ namespace TDTK {
 				timerDuration-=Time.fixedDeltaTime;
 			}
 			else if(txtTimer.text!="") txtTimer.text="";
+
+
+            if(animateStory)
+            {
+                cumulativeTime += Time.deltaTime;
+                xDelta = 25 * cumulativeTime;
+
+
+                if (animateDirectory == 1)
+                {
+                    if (storyRect.position.x < (Screen.width - 50 + 300))
+                    {
+                        storyRect.Translate(xDelta, 0, 0);                        
+                    }
+                    else
+                    {
+                        animateStory = false;
+                    }
+                }
+                else
+                {
+                    if(storyRect.position.x > 478f)
+                    {
+                        storyRect.Translate(-xDelta, 0, 0);
+                    }
+                    else
+                    {
+                        storyRect.Translate(0, 0, 0);
+                        animateStory = false;
+                    }
+                }
+            }
 		}
 		
 		
@@ -150,7 +197,22 @@ namespace TDTK {
 
         public void OnCloseStoryButton()
         {
-            storyObj.SetActive(false);
+            //storyObj.SetActive(false);
+            animateDirectory = 1;
+            animateStory = true;
+            cumulativeTime = 0.0f;
+            xDelta = 0.0f;
+        }
+
+        public void OnStoryClick()
+        {
+            if(storyRect.position.x > 478f)
+            {
+                animateDirectory = -1;
+                animateStory = true;
+                cumulativeTime = 0.0f;
+                xDelta = 0.0f;
+            }            
         }
     }
 
