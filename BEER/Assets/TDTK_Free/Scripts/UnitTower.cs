@@ -275,8 +275,6 @@ namespace TDTK
         lastBuiltEnergyRecieverTower.startDroneFlight(this);
         lastBuiltEnergyRecieverTower.ClearTowerHighlighter();
         lastBuiltEnergyRecieverTower = null;
-
-        
       }
     }
 
@@ -317,7 +315,8 @@ namespace TDTK
 
       while (unit != null)
       {
-        unit.currentElectricity += unit.electricityRegenerationRate;
+        if(unit.currentElectricity + unit.electricityRegenerationRate < unit.maxElectricity)
+            unit.currentElectricity += unit.electricityRegenerationRate;
 
         yield return null;
       }
