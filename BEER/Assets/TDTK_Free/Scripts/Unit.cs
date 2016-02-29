@@ -89,8 +89,20 @@ namespace TDTK
     public bool electricityReciever = false;
     public float currentSpendingRate = 0.02f;
 
-    public UnitTower electricitySource;
-    public float electricityNeedForShoot = 0.1f;
+        public List<UnitTower> electicitySources = new List<UnitTower>();
+
+        // returns first tower that has enough electricityNeedForShoot
+        // if no such tower has been found returns null
+        public UnitTower getElectricitySource(float electricityNeedForShoot)
+        {
+            foreach (UnitTower tower in electicitySources)
+            {
+                if (tower.currentElectricity - electricityNeedForShoot >= 0)
+                    return tower;
+            }
+            return null;
+        }
+        public float electricityNeedForShoot = 0.1f;
 
     //public int level=1;
 
@@ -459,8 +471,9 @@ namespace TDTK
       while (true)
       {
 
-        // disable shooting while there is no electricity
-        while (electricitySource != null && electricitySource.currentElectricity - electricityNeedForShoot < 0)
+                // disable shooting while there is no electricity
+                UnitTower electricitySource = getElectricitySource(electricityNeedForShoot);
+        while (electricitySource == null)
         {
           // Paint deactivated towers black
           for (int i = 0; i < myRenderers.Length; i++)
@@ -468,6 +481,8 @@ namespace TDTK
             myRenderers[i].material.color = new Color(0.2f, 0.2f, 0.2f);
           }
 
+
+          electricitySource = getElectricitySource(electricityNeedForShoot);
           yield return null;
         }
 

@@ -477,35 +477,35 @@ namespace TDTK
             {
                 LayerMask maskTarget = 1 << LayerManager.LayerTower();
 
-                // List<UnitTower> tgtList = new List<UnitTower>();
                 Collider[] cols = Physics.OverlapSphere(buildInfo.position, 1000 /*GetRange()*/, maskTarget);
-                UnitTower unit = null;
+
                 if (cols.Length > 0)
                 {
-                    // find closest electric facility
-
-                    float min_d = 5000;
+                    tower.electicitySources.Clear();
+                    // find all electric facility
                     for (int i = 0; i < cols.Length; i++)
                     {
                         // if it's not electric reciever skip
                         if (!cols[i].gameObject.GetComponent<UnitTower>().electricityReciever)
                             continue;
 
-                        if (Vector3.Distance(cols[i].gameObject.GetComponent<UnitTower>().transform.position, buildInfo.position) < min_d)
+                        // if this tower is in range of electricityReciever
+                        if (Vector3.Distance(cols[i].gameObject.GetComponent<UnitTower>().transform.position, buildInfo.position) <= cols[i].gameObject.GetComponent<UnitTower>().GetRange())
                         {
-                            min_d = Vector3.Distance(cols[i].gameObject.GetComponent<UnitTower>().transform.position, buildInfo.position);
-                            unit = cols[i].gameObject.GetComponent<UnitTower>();
+                            tower.electicitySources.Add(cols[i].gameObject.GetComponent<UnitTower>());
                         }
                     }
 
-                    if (unit == null || min_d > unit.GetRange())
+                    Debug.Log("tower.electicitySources.Count= " + tower.electicitySources.Count);
+
+                    if (tower.electicitySources.Count == 0)
                     {
                         // set electricity source for tower weapon
                         return "There is not enough electricity";
                     }
-                    else
-                        tower.electricitySource = unit;
                 }
+                else
+                    return "There is not enough electricity";
             }
             /***/
 
