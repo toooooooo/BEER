@@ -435,7 +435,7 @@ namespace TDTK {
 
         cont = new GUIContent("Max Electricity:", "Maximal energy capacity of the electric facility.");
         EditorGUI.LabelField(new Rect(startX, startY += spaceY, width, height), cont);
-        tower.maxElectricity = EditorGUI.FloatField(new Rect(startX + spaceX, startY, fWidth, height), tower.maxElectricity);
+        stat.maxElectricity = EditorGUI.FloatField(new Rect(startX + spaceX, startY, fWidth, height), stat.maxElectricity);
 
         cont = new GUIContent("Elec. Regeneration:", "The ..");
         EditorGUI.LabelField(new Rect(startX, startY += spaceY, width, height), cont);

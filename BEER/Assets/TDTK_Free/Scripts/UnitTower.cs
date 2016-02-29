@@ -132,7 +132,7 @@ namespace TDTK
       }
 
 
-      construction = !reverse ? _Construction.Constructing : _Construction.Deconstructing;
+            construction = !reverse ? _Construction.Constructing : _Construction.Deconstructing;
 
       builtDuration = 0;
       buildDuration = duration;
@@ -166,12 +166,16 @@ namespace TDTK
 
 
       if (reverse)
-      {
+      { 
+
         if (onSoldE != null) onSoldE(this);
 
         if (possible)
           ResourceManager.GainResource(GetValue());
-
+            
+        // if tower is destructed, destroy drone
+                if (drone != null) Destroy(drone);
+                if (moveObjectHndl != null) StopCoroutine(moveObjectHndl);
         Dead();
       }
     }
@@ -256,7 +260,7 @@ namespace TDTK
 
     void OnMouseDown()
     {
-      if (/*lastBuiltEnergyRecieverTower == null &&*/ electricityReciever)
+      if (/*lastBuiltEnergyRecieverTower == null &&*/ electricityReciever && !electricityFacility)
       {
                 if(lastBuiltEnergyRecieverTower!= null)
                 {
@@ -266,7 +270,7 @@ namespace TDTK
         lastBuiltEnergyRecieverTower = this;
       }
 
-      Debug.Log((lastBuiltEnergyRecieverTower != null) + " " + electricityFacility);
+      // Debug.Log((lastBuiltEnergyRecieverTower != null) + " " + electricityFacility);
 
       if (lastBuiltEnergyRecieverTower != null && electricityFacility)
       {
@@ -315,7 +319,7 @@ namespace TDTK
 
       while (unit != null)
       {
-        if(unit.currentElectricity + unit.electricityRegenerationRate < unit.maxElectricity)
+        if(unit.currentElectricity + unit.electricityRegenerationRate < unit.GetMaxElectricity())
             unit.currentElectricity += unit.electricityRegenerationRate;
 
         yield return null;

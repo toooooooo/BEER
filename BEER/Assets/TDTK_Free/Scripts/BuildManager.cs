@@ -509,6 +509,32 @@ namespace TDTK
             }
             /***/
 
+            /**********************/
+            // if new electricity reciver is placed search for all towers in it's range and add itself as electricity source
+            if (tower.electricityReciever)
+            {
+                LayerMask maskTarget = 1 << LayerManager.LayerTower();
+
+                Collider[] cols = Physics.OverlapSphere(buildInfo.position, tower.GetRange(), maskTarget);
+
+                Debug.Log("# towers near is " + cols.Length);
+                if (cols.Length > 0)
+                {
+                    UnitTower tmp_tow;
+                    for (int i = 0; i < cols.Length; i++)
+                    {
+                        tmp_tow = cols[i].gameObject.GetComponent<UnitTower>();
+
+                        if (tmp_tow.electricityReciever || tmp_tow.electricityFacility)
+                            continue;
+
+
+                        tmp_tow.electicitySources.Add(tower);
+                    }
+                }
+            }
+            /**********************/
+
 
             //check if there are sufficient resource
             List<int> cost = sampleTower.GetCost();

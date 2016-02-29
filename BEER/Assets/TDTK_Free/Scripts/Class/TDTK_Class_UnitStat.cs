@@ -14,8 +14,12 @@ namespace TDTK {
 		public float reloadDuration=2;
 		public float range=10;
 		public float aoeRadius=0;	//aoe radius when shootObject hit target
-		
-		public Critical crit;
+
+        /*******/
+        public float maxElectricity = 20;
+        /*******/
+
+        public Critical crit;
 		public Stun stun;
 		public Slow slow;
 		public Dot dot;				//damage over time
