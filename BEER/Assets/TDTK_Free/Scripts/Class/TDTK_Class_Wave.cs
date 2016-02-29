@@ -42,7 +42,7 @@ namespace TDTK {
 		
 		public int lifeGain=0;
 		public int energyGain=0;
-		public int scoreGain=100;
+		public int scoreGain=10;
 		public List<int> rscGainList=new List<int>();
 		
 		public int activeUnitCount=0;	//only used in runtime
