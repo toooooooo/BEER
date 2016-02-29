@@ -5,33 +5,58 @@ using System.Collections.Generic;
 public class TowerHighlighter : MonoBehaviour
 {
 
-  private List<Color> myRenderersColors;
-  private MeshRenderer[] myRenderers;
+    private List<Color> myRenderersColors;
+    private MeshRenderer[] myRenderers;
+    private TDTK.UnitTower unitTowerT;
 
-  // Use this for initialization
-  void Start()
-  {
-    myRenderers = GetComponentsInChildren<MeshRenderer>();
-    myRenderersColors = new List<Color>(myRenderers.Length);
-    for (int i = 0; i < myRenderers.Length; i++)
+    // Use this for initialization
+    void Start()
     {
-      myRenderersColors.Add(myRenderers[i].material.color);
+        myRenderers = GetComponentsInChildren<MeshRenderer>();
+        myRenderersColors = new List<Color>(myRenderers.Length);
+        for (int i = 0; i < myRenderers.Length; i++)
+        {
+            myRenderersColors.Add(myRenderers[i].material.color);
+        }
+
+        unitTowerT = GetComponent<TDTK.UnitTower>();
     }
-  }
 
 
-  void OnMouseEnter()
-  {
-    for (int i = 0; i < myRenderers.Length; i++)
+    void OnMouseDown()
     {
-      myRenderers[i].material.color = Color.yellow;
+        // Debug.Log("OnMouseDown " + unitTowerT.electricityReciever);
+        if (unitTowerT.electricityReciever)
+        {
+            for (int i = 0; i < myRenderers.Length; i++)
+            {
+                myRenderers[i].material.color = Color.yellow;
+            }
+        }
     }
-  }
-  void OnMouseExit()
-  {
-    for (int i = 0; i < myRenderers.Length; i++)
+
+
+
+    void OnMouseEnter()
     {
-      myRenderers[i].material.color = myRenderersColors[i];
+        for (int i = 0; i < myRenderers.Length; i++)
+        {
+            myRenderers[i].material.color = Color.yellow;
+        }
     }
-  }
+    void OnMouseExit()
+    {
+        if (TDTK.UnitTower.lastBuiltEnergyRecieverTower != null && TDTK.UnitTower.lastBuiltEnergyRecieverTower == unitTowerT)
+            return;
+
+        Clear();
+    }
+
+    public void Clear()
+    {
+        for (int i = 0; i < myRenderers.Length; i++)
+        {
+            myRenderers[i].material.color = myRenderersColors[i];
+        }
+    }
 }
