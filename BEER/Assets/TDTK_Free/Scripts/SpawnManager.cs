@@ -49,6 +49,8 @@ namespace TDTK
 
         public List<Wave> waveList = new List<Wave>();  //in endless mode, this is use to store temporary wave
 
+        public List<string> waveNames = new List<string>();
+
         public WaveGenerator waveGenerator;
 
         public static SpawnManager instance;
@@ -61,6 +63,16 @@ namespace TDTK
         // Use this for initialization
         void Start()
         {
+            int n = waveNames.Count;
+            System.Random rng = new System.Random();
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                string value = waveNames[k];
+                waveNames[k] = waveNames[n];
+                waveNames[n] = value;
+            }
         }
         public void Init()
         {
@@ -210,8 +222,12 @@ namespace TDTK
         {
             if (spawning) return 0;
 
+
             spawning = true;
             currentWaveID += 1;
+
+
+            UIGameMessage.DisplayMessage(waveNames[currentWaveID % waveNames.Count] + " approaching..");
 
             if (currentWaveID >= waveList.Count) return 0;
 
