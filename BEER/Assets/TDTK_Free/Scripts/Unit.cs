@@ -92,7 +92,7 @@ namespace TDTK
     {
       foreach (UnitTower electricityTower in electicitySources)
       {
-        if (electricityTower.electricityCurrentlyStored - electricityNeedForShoot >= 0)
+        if (!electricityTower.dead && electricityTower.electricityCurrentlyStored - electricityNeedForShoot >= 0)
           return electricityTower;
       }
       return null;

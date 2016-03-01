@@ -277,16 +277,13 @@ namespace TDTK
 
       // Debug.Log((lastBuiltEnergyRecieverTower != null) + " " + electricityFacility);
 
-      if (lastBuiltEnergyRecieverTower != null)
+      if (lastBuiltEnergyRecieverTower != null && electricityFacility)
       {
-        if (electricityFacility)
-        {
           Debug.Log("sending drone to the new destination");
           lastBuiltEnergyRecieverTower.energyProducer = this;
           lastBuiltEnergyRecieverTower.startDroneFlight(this);
+          lastBuiltEnergyRecieverTower.ClearTowerHighlighter();
           lastBuiltEnergyRecieverTower = null;
-        }
-        lastBuiltEnergyRecieverTower.ClearTowerHighlighter();
       }
     }
 
