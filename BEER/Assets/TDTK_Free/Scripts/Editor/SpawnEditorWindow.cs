@@ -185,12 +185,16 @@ namespace TDTK {
 				cont=new GUIContent("Energy Gain: ", "The amount of energy (for abilities) player will gain when surviving the wave");
 				EditorGUI.LabelField(new Rect(startX, startY+=spaceY-2, width, height), cont);
 				wave.energyGain=EditorGUI.IntField(new Rect(startX+spaceX-20, startY, 40, 15), wave.energyGain);
-				
-				//~ startX=cachedX;	startY+=3;
-				
-				
-				
-				cont=new GUIContent("Resource Gain:", "The amount of resource player will gain when surviving the wave");
+
+        cont = new GUIContent("Score Gain: ", "The score a player gains when skipping the wave");
+        EditorGUI.LabelField(new Rect(startX, startY += spaceY, width, height), cont);
+        wave.scoreGain = EditorGUI.IntField(new Rect(startX + spaceX - 20, startY, 40, 15), wave.scoreGain);
+
+        //~ startX=cachedX;	startY+=3;
+
+
+
+        cont =new GUIContent("Resource Gain:", "The amount of resource player will gain when surviving the wave");
 				EditorGUI.LabelField(new Rect(startX, startY+=spaceY, 300, 15), cont);
 				
 				cachedX=startX;
@@ -354,8 +358,11 @@ namespace TDTK {
 				cont=new GUIContent("      "+rscList[i].name+":");
 				v2=DrawProceduralVariable(startX, startY, waveGen.rscSettingList[i], cont);		startX+=v2.x+20;	//startY=v2.y;
 			}
-			
-			startX=cachedX;
+
+      //cont = new GUIContent("Score Gain:");
+      //v2 = DrawProceduralVariable(startX, startY, waveGen., cont); startX += v2.x + 20;  //startY=v2.y;
+
+      startX =cachedX;
 			startY=v2.y+spaceY+15;
 			
 			for(int i=0; i<waveGen.unitSettingList.Count; i++){

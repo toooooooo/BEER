@@ -789,6 +789,10 @@ namespace TDTK
         {
             int index_z = (int)Mathf.Round(tow.Platform.transform.position.z - platform_min_z) / 2;
             int index_x = (int)Mathf.Round(tow.Platform.transform.position.x - platform_min_x) / 2;
+
+            if (index_z < 0)
+              return true;
+
             beerMap[index_x, index_z + 1] = destroy;
             
 
