@@ -20,6 +20,7 @@ namespace TDTK {
 		public List<UnityButton> rscObjList=new List<UnityButton>();
 
         public GameObject storyObj;
+        public Image opacityImage;
 
         public AudioSource storyAudio;
 
@@ -32,7 +33,7 @@ namespace TDTK {
 
         RectTransform storyRect;
         GameObject[] infoImages;
-        bool infoImagesActive = false;
+        bool infoImagesActive = true;
 		
 		
 		// Use this for initialization
@@ -68,6 +69,7 @@ namespace TDTK {
             storyAudio.Play();
 
             infoImages = GameObject.FindGameObjectsWithTag("InfoImagesTag");
+            OnInfoButton();
         }
 		
 		void OnEnable(){
