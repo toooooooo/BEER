@@ -33,8 +33,8 @@ namespace TDTK {
 		}
 		
 		
-		public static void DisplayMessage(string msg){ instance._DisplayMessage(msg);	}
-		void _DisplayMessage(string msg){
+		public static void DisplayMessage(string msg, float duration = 1.25f) { instance._DisplayMessage(msg, duration);	}
+		void _DisplayMessage(string msg, float duration = 1.25f ){
 			if(txtGameMessage==null) return;
 			
 			int counter=msgList.Count;
@@ -52,13 +52,13 @@ namespace TDTK {
 			obj.SetActive(true);
 			
 			msgList.Add(obj);
-			StartCoroutine(DestroyMessage(obj));
+			StartCoroutine(DestroyMessage(obj, duration));
 		}
 		
 		
-		IEnumerator DestroyMessage(GameObject obj){
+		IEnumerator DestroyMessage(GameObject obj, float duration){
 			float dur=0;
-			while(dur<1.25f){ dur+=Time.unscaledDeltaTime;	yield return null; }
+			while(dur<duration){ dur+=Time.unscaledDeltaTime;	yield return null; }
 			
 			TweenScale(obj, 0.5f, new Vector3(0.01f, 0.01f, 0.01f));
 			
