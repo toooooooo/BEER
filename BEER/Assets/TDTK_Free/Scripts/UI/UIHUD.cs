@@ -31,6 +31,8 @@ namespace TDTK {
         float defaultX;
 
         RectTransform storyRect;
+        GameObject[] infoImages;
+        bool infoImagesActive = false;
 		
 		
 		// Use this for initialization
@@ -64,6 +66,8 @@ namespace TDTK {
 
             storyObj.SetActive(true);
             storyAudio.Play();
+
+            infoImages = GameObject.FindGameObjectsWithTag("InfoImagesTag");
         }
 		
 		void OnEnable(){
@@ -200,6 +204,17 @@ namespace TDTK {
 				UIPauseMenu.Show();
 			}
 		}
+
+        public void OnInfoButton()
+        {
+            //Do crazy stuff
+
+            infoImagesActive = !infoImagesActive;
+            foreach (GameObject o in infoImages)
+            {
+                o.SetActive(infoImagesActive);
+            }
+        }
 
         public void OnCloseStoryButton()
         {
