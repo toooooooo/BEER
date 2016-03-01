@@ -18,7 +18,9 @@ namespace TDTK
     public float aoeRadius = 0; //aoe radius when shootObject hit target
 
     /*******/
-    public float maxElectricity = 20;
+    public float electricityMaxStored = 20;
+    public float electricityRegenerationRate = 0.04f;
+    public float electricityReceiveRate = 2.0f;
     /*******/
 
     public Critical crit;
@@ -67,6 +69,10 @@ namespace TDTK
       stat.unBuildDuration = unBuildDuration;
       stat.shootObjectT = shootObjectT;
       stat.desp = desp;
+
+      stat.electricityMaxStored = electricityMaxStored;
+      stat.electricityRegenerationRate = electricityRegenerationRate;
+      stat.electricityReceiveRate = electricityReceiveRate;
 
       for (int i = 0; i < rscGain.Count; i++) stat.rscGain.Add(rscGain[i]);
       for (int i = 0; i < cost.Count; i++) stat.cost.Add(cost[i]);

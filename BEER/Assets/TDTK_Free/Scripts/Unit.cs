@@ -80,30 +80,23 @@ namespace TDTK
 
     // electricity things
     public bool electricityNeeded = true;
-
     public bool electricityFacility = false;
-    public float currentElectricity = 0;
-    public float electricityRegenerationRate = 0.04f;
-
     public bool electricityReciever = false;
-    public float currentSpendingRate = 0.02f;
-
+    public float electricityCurrentlyStored = 0;
+    public float electricityNeedForShoot = 0.1f;
     public List<UnitTower> electicitySources = new List<UnitTower>();
 
     // returns first tower that has enough electricityNeedForShoot
     // if no such tower has been found returns null
     public UnitTower getElectricitySource(float electricityNeedForShoot)
     {
-      foreach (UnitTower tower in electicitySources)
+      foreach (UnitTower electricityTower in electicitySources)
       {
-        if (tower.currentElectricity - electricityNeedForShoot >= 0)
-          return tower;
+        if (electricityTower.electricityCurrentlyStored - electricityNeedForShoot >= 0)
+          return electricityTower;
       }
       return null;
     }
-    public float electricityNeedForShoot = 0.1f;
-
-    //public int level=1;
 
     public int currentActiveStat = 0;
     [HideInInspector]
@@ -468,7 +461,9 @@ namespace TDTK
       }
 
       yield return null;
+
       UnitTower electricitySource;
+
       while (true)
       {
 
@@ -483,7 +478,6 @@ namespace TDTK
             myRenderers[i].material.color = new Color(0.2f, 0.2f, 0.2f);
           }
 
-
           electricitySource = getElectricitySource(electricityNeedForShoot);
           yield return null;
         }
@@ -496,16 +490,13 @@ namespace TDTK
 
         // target will shoot so take that energy
         if (electricitySource != null)
-          electricitySource.currentElectricity -= electricityNeedForShoot;
-
-
-
+          electricitySource.electricityCurrentlyStored -= electricityNeedForShoot;
 
 
         while (target == null || stunned || IsInConstruction() || !targetInLOS) yield return null;
+
         if (!electricitySource.dead)
         {
-
           Unit currentTarget = target;
 
           float animationDelay = 0;
@@ -831,9 +822,10 @@ namespace TDTK
     public Slow GetSlow() { return stats[currentActiveStat].slow; }
     public Dot GetDot() { return stats[currentActiveStat].dot; }
 
-    public float GetMaxElectricity() { return stats[currentActiveStat].maxElectricity; }
-    public float GetElectricityRegenerationRate() { return electricityRegenerationRate; }
-    public float GetCurrentElectricity() { return currentElectricity; }
+    public float GetMaxElectricity() { return stats[currentActiveStat].electricityMaxStored; }
+    public float GetElectricityRegenerationRate() { return stats[currentActiveStat].electricityRegenerationRate; }
+    public float GetElectricityReceiveRate() { return stats[currentActiveStat].electricityReceiveRate;  }
+    public float GetCurrentElectricity() { return electricityCurrentlyStored; }
 
 
 
@@ -891,7 +883,7 @@ namespace TDTK
 
         Dot dot = GetDot();
         float dotDmg = dot.GetTotalDamage();
-        if (dotDmg > 0) text += "\nDead " + dotDmg.ToString("f0") + " over " + dot.duration.ToString("f0") + "s";
+        if (dotDmg > 0) text += "\nDamage " + dotDmg.ToString("f0") + " over " + dot.duration.ToString("f0") + "sec";
 
       }
       else if (tower.type == _TowerType.Support)
@@ -921,6 +913,7 @@ namespace TDTK
       {
         if (GetMaxElectricity() > 0) text += "Max electricity stored: " + GetMaxElectricity().ToString();
         if (GetElectricityRegenerationRate() > 0) text += "\nElectricity generated: " + GetElectricityRegenerationRate().ToString();
+        if (GetElectricityReceiveRate() > 0) text += "\nElectricity Transfer Rate: " + GetElectricityReceiveRate().ToString();
         if (GetCurrentElectricity() > 0) text += "\nElectricity available: " + GetCurrentElectricity().ToString();
       }
 

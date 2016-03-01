@@ -507,7 +507,7 @@ namespace TDTK
             }
             /***/
 
-            /**********************
+            
             // if new electricity reciver is placed search for all towers in it's range and add itself as electricity source
             if (tower.electricityReciever)
             {
@@ -529,7 +529,7 @@ namespace TDTK
                     }
                 }
             }
-            **********************/
+            
 
 
             //check if there are sufficient resource

@@ -66,7 +66,7 @@ namespace TDTK {
 
             while (unit != null)
             {
-                overlay.barHP.value = unit.currentElectricity / unit.GetMaxElectricity();
+                overlay.barHP.value = unit.electricityCurrentlyStored / unit.GetMaxElectricity();
                 // if (unit.defaultShield > 0) overlay.barShield.value = unit.shield / unit.fullShield;
 
                 Vector3 screenPos = mainCam.WorldToScreenPoint(unit.thisT.position + new Vector3(0, 0, 0));
@@ -97,7 +97,7 @@ namespace TDTK {
 
             while (unit != null)
             {
-                overlay.barShield.value = unit.currentElectricity / unit.GetMaxElectricity();
+                overlay.barShield.value = unit.electricityCurrentlyStored / unit.GetMaxElectricity();
 
                 Vector3 screenPos = mainCam.WorldToScreenPoint(unit.thisT.position + new Vector3(0, 0, 0));
                 overlay.rootT.localPosition = screenPos + new Vector3(0, 20, 0);

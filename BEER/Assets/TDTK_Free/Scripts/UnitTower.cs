@@ -132,7 +132,7 @@ namespace TDTK
       }
 
 
-            construction = !reverse ? _Construction.Constructing : _Construction.Deconstructing;
+      construction = !reverse ? _Construction.Constructing : _Construction.Deconstructing;
 
       builtDuration = 0;
       buildDuration = duration;
@@ -156,26 +156,17 @@ namespace TDTK
 
       buildFinished();
 
-      /****
-      if (electricityReciever)
-      {
-          lastBuiltEnergyRecieverTower = this;
-      }
-      ******/
-
-
-
       if (reverse)
-      { 
+      {
 
         if (onSoldE != null) onSoldE(this);
 
         if (possible)
           ResourceManager.GainResource(GetValue());
-            
+
         // if tower is destructed, destroy drone
-                if (drone != null) Destroy(drone);
-                if (moveObjectHndl != null) StopCoroutine(moveObjectHndl);
+        if (drone != null) Destroy(drone);
+        if (moveObjectHndl != null) StopCoroutine(moveObjectHndl);
         Dead();
       }
     }
@@ -201,28 +192,31 @@ namespace TDTK
 
 
     private IEnumerator moveObjectHndl;
-    IEnumerator StartDroneFlight(UnitTower tower, GameObject drone, Vector3 point_A, Vector3 point_B)
+    IEnumerator StartDroneFlight(UnitTower powerplant, GameObject drone, Vector3 point_A, Vector3 point_B)
     {
       // rotate drone to electric facility
-      // 
+
       float electricity_taken = 0f;
+
       while (true)
       {
         // look at electricity source (windmill...)
-        drone.transform.LookAt(tower.transform);
+        drone.transform.LookAt(powerplant.transform);
         // fly to it
         moveObjectHndl = MoveObject(drone.transform, point_A, point_B, 3.0f);
+
         yield return StartCoroutine(moveObjectHndl);
 
         // take energy from electricty source
-        if (tower.currentElectricity - electricityRegenerationRate < 0)
+        if (powerplant.electricityCurrentlyStored - GetElectricityReceiveRate() < 0)
         {
-          electricity_taken = 0;
+          electricity_taken = powerplant.electricityCurrentlyStored;
+          powerplant.electricityCurrentlyStored = 0; ;
         }
         else
         {
-          electricity_taken = electricityRegenerationRate;
-          tower.currentElectricity -= electricityRegenerationRate;
+          electricity_taken = GetElectricityReceiveRate();
+          powerplant.electricityCurrentlyStored -= GetElectricityReceiveRate();
         }
 
         // turn back
@@ -233,16 +227,17 @@ namespace TDTK
         yield return StartCoroutine(moveObjectHndl);
 
         // drone "delivered" energy
-        currentElectricity += electricity_taken;
-        // if (electricity_taken != 0)
-        // {
-        // new TextOverlay(thisT.position, "+" + electricity_taken.ToString(), new Color(0f, 1f, 0f, 1f));
-        // }
-        // else
-        // {
-        // new TextOverlay(thisT.position, "+" + electricity_taken.ToString(), new Color(1f, 0f, 0f, 1f));
-        // }
-
+        if (electricityCurrentlyStored + electricity_taken > GetMaxElectricity())
+        {
+          electricityCurrentlyStored = GetMaxElectricity();
+          // unnecessary electricity is lost = 0f
+          electricity_taken = 0f;
+        }
+        else
+        {
+          electricityCurrentlyStored += electricity_taken;
+          electricity_taken = 0f;
+        }    
       }
     }
 
@@ -262,11 +257,11 @@ namespace TDTK
     {
       if (/*lastBuiltEnergyRecieverTower == null &&*/ electricityReciever && !electricityFacility)
       {
-                if(lastBuiltEnergyRecieverTower!= null)
-                {
-                    lastBuiltEnergyRecieverTower.ClearTowerHighlighter();
-                }
-                //Debug.Log("setting dron start point");
+        if (lastBuiltEnergyRecieverTower != null)
+        {
+          lastBuiltEnergyRecieverTower.ClearTowerHighlighter();
+        }
+        //Debug.Log("setting dron start point");
         lastBuiltEnergyRecieverTower = this;
       }
 
@@ -282,12 +277,12 @@ namespace TDTK
       }
     }
 
-        public void ClearTowerHighlighter()
-        {
-            TowerHighlighter th = GetComponent<TowerHighlighter>();
-            if(th != null)
-                th.Clear();
-        }
+    public void ClearTowerHighlighter()
+    {
+      TowerHighlighter th = GetComponent<TowerHighlighter>();
+      if (th != null)
+        th.Clear();
+    }
 
     public float GetBuildProgress()
     {
@@ -320,34 +315,20 @@ namespace TDTK
       while (unit != null)
       {
         float realRegenRate = unit.GetElectricityRegenerationRate();
-        
+
         if (unit.platform.gameObject.tag == "Ocean")
           realRegenRate = realRegenRate * 3.0f;       // magic numbers TODO -> create parameters for them
         else if (unit.platform.gameObject.tag == "Hill")
           realRegenRate = realRegenRate * 4.0f;
 
-        if (unit.currentElectricity + realRegenRate < unit.GetMaxElectricity())
-          unit.currentElectricity += realRegenRate;
+        if (unit.electricityCurrentlyStored + realRegenRate < unit.GetMaxElectricity())
+          unit.electricityCurrentlyStored += realRegenRate;
         else
-          unit.currentElectricity = unit.GetMaxElectricity();
+          unit.electricityCurrentlyStored = unit.GetMaxElectricity();
 
         yield return null;
       }
     }
-
-    IEnumerator ReceiveEnergyRoutine(Unit unit)
-    {
-      if (!unit.electricityReciever)
-        yield return null;
-
-      while (unit != null)
-      {
-        unit.currentElectricity += unit.electricityRegenerationRate - unit.currentSpendingRate;
-
-        yield return null;
-      }
-    }
-
 
     public void Sell()
     {
