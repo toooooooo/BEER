@@ -312,15 +312,24 @@ namespace TDTK
       // if (onDamagedE != null) onDamagedE(this);
     }
 
-    IEnumerator GenerateEnergyRoutine(Unit unit)
+    IEnumerator GenerateEnergyRoutine(UnitTower unit)
     {
       if (!unit.electricityFacility)
         yield return null;
 
       while (unit != null)
       {
-        if(unit.currentElectricity + unit.electricityRegenerationRate < unit.GetMaxElectricity())
-            unit.currentElectricity += unit.electricityRegenerationRate;
+        float realRegenRate = unit.GetElectricityRegenerationRate();
+        
+        if (unit.platform.gameObject.tag == "Ocean")
+          realRegenRate = realRegenRate * 3.0f;       // magic numbers TODO -> create parameters for them
+        else if (unit.platform.gameObject.tag == "Hill")
+          realRegenRate = realRegenRate * 4.0f;
+
+        if (unit.currentElectricity + realRegenRate < unit.GetMaxElectricity())
+          unit.currentElectricity += realRegenRate;
+        else
+          unit.currentElectricity = unit.GetMaxElectricity();
 
         yield return null;
       }

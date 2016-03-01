@@ -88,20 +88,20 @@ namespace TDTK
     public bool electricityReciever = false;
     public float currentSpendingRate = 0.02f;
 
-        public List<UnitTower> electicitySources = new List<UnitTower>();
+    public List<UnitTower> electicitySources = new List<UnitTower>();
 
-        // returns first tower that has enough electricityNeedForShoot
-        // if no such tower has been found returns null
-        public UnitTower getElectricitySource(float electricityNeedForShoot)
-        {
-            foreach (UnitTower tower in electicitySources)
-            {
-                if (tower.currentElectricity - electricityNeedForShoot >= 0)
-                    return tower;
-            }
-            return null;
-        }
-        public float electricityNeedForShoot = 0.1f;
+    // returns first tower that has enough electricityNeedForShoot
+    // if no such tower has been found returns null
+    public UnitTower getElectricitySource(float electricityNeedForShoot)
+    {
+      foreach (UnitTower tower in electicitySources)
+      {
+        if (tower.currentElectricity - electricityNeedForShoot >= 0)
+          return tower;
+      }
+      return null;
+    }
+    public float electricityNeedForShoot = 0.1f;
 
     //public int level=1;
 
@@ -259,7 +259,8 @@ namespace TDTK
             if (Quaternion.Angle(barrelObject.rotation, wantedRot) < aimTolerance) targetInLOS = true;
             else targetInLOS = false;
           }
-          else {
+          else
+          {
             Vector3 targetPos = target.GetTargetT().position;
             if (!rotateTurretAimInXAxis) targetPos.y = turretObject.position.y;
 
@@ -433,7 +434,8 @@ namespace TDTK
             }
           }
         }
-        else {
+        else
+        {
           float dist = Vector3.Distance(thisT.position, target.thisT.position);
           if (target.dead || dist > GetRange()) target = null;
         }
@@ -466,12 +468,12 @@ namespace TDTK
       }
 
       yield return null;
-            UnitTower electricitySource;
+      UnitTower electricitySource;
       while (true)
       {
 
-                // disable shooting while there is no electricity
-                electricitySource = getElectricitySource(electricityNeedForShoot);
+        // disable shooting while there is no electricity
+        electricitySource = getElectricitySource(electricityNeedForShoot);
 
         while (electricitySource == null)
         {
@@ -492,9 +494,9 @@ namespace TDTK
           myRenderers[i].material.color = myRenderersColors[i];
         }
 
-                // target will shoot so take that energy
-                if (electricitySource != null)
-                    electricitySource.currentElectricity -= electricityNeedForShoot;
+        // target will shoot so take that energy
+        if (electricitySource != null)
+          electricitySource.currentElectricity -= electricityNeedForShoot;
 
 
 
@@ -504,31 +506,31 @@ namespace TDTK
         if (!electricitySource.dead)
         {
 
-            Unit currentTarget = target;
+          Unit currentTarget = target;
 
-            float animationDelay = 0;
-            if (playShootAnimation != null) animationDelay = playShootAnimation();
-            if (animationDelay > 0) yield return new WaitForSeconds(animationDelay);
+          float animationDelay = 0;
+          if (playShootAnimation != null) animationDelay = playShootAnimation();
+          if (animationDelay > 0) yield return new WaitForSeconds(animationDelay);
 
-            AttackInstance attInstance = new AttackInstance();
-            attInstance.srcUnit = this;
-            attInstance.tgtUnit = currentTarget;
-            attInstance.Process();
+          AttackInstance attInstance = new AttackInstance();
+          attInstance.srcUnit = this;
+          attInstance.tgtUnit = currentTarget;
+          attInstance.Process();
 
-            for (int i = 0; i < shootPoints.Count; i++)
-            {
-                Transform sp = shootPoints[i];
-                Transform objT = (Transform)Instantiate(GetShootObjectT(), sp.position, sp.rotation);
-                ShootObject shootObj = objT.GetComponent<ShootObject>();
-                shootObj.Shoot(attInstance, sp);
+          for (int i = 0; i < shootPoints.Count; i++)
+          {
+            Transform sp = shootPoints[i];
+            Transform objT = (Transform)Instantiate(GetShootObjectT(), sp.position, sp.rotation);
+            ShootObject shootObj = objT.GetComponent<ShootObject>();
+            shootObj.Shoot(attInstance, sp);
 
-                if (delayBetweenShootPoint > 0) yield return new WaitForSeconds(delayBetweenShootPoint);
-            }
+            if (delayBetweenShootPoint > 0) yield return new WaitForSeconds(delayBetweenShootPoint);
+          }
 
-            yield return new WaitForSeconds(GetCooldown() - animationDelay - shootPoints.Count * delayBetweenShootPoint);
+          yield return new WaitForSeconds(GetCooldown() - animationDelay - shootPoints.Count * delayBetweenShootPoint);
         }
 
-        
+
       }
     }
 
@@ -831,6 +833,7 @@ namespace TDTK
 
     public float GetMaxElectricity() { return stats[currentActiveStat].maxElectricity; }
     public float GetElectricityRegenerationRate() { return electricityRegenerationRate; }
+    public float GetCurrentElectricity() { return currentElectricity; }
 
 
 
@@ -917,7 +920,8 @@ namespace TDTK
       else if (tower.type == _TowerType.Electric)
       {
         if (GetMaxElectricity() > 0) text += "Max electricity stored: " + GetMaxElectricity().ToString();
-        if (electricityRegenerationRate > 0) text += "\nElectricity generated: " + electricityRegenerationRate.ToString();
+        if (GetElectricityRegenerationRate() > 0) text += "\nElectricity generated: " + GetElectricityRegenerationRate().ToString();
+        if (GetCurrentElectricity() > 0) text += "\nElectricity available: " + GetCurrentElectricity().ToString();
       }
 
       return text;
