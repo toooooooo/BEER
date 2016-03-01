@@ -67,7 +67,7 @@ namespace TDTK {
 
             storyObj.SetActive(true);
             storyAudio.Play();
-
+            
             infoImages = GameObject.FindGameObjectsWithTag("InfoImagesTag");
             OnInfoButton();
         }
