@@ -14,9 +14,9 @@ namespace TDTK
     public class GameControl : MonoBehaviour
     {
 
-        public delegate void GameMessageHandler(string msg);
+        public delegate void GameMessageHandler(string msg, float duration);
         public static event GameMessageHandler onGameMessageE;
-        public static void DisplayMessage(string msg) { if (onGameMessageE != null) onGameMessageE(msg); }
+        public static void DisplayMessage(string msg, float duration = 1.25f) { if (onGameMessageE != null) onGameMessageE(msg, duration); }
 
         public delegate void GameOverHandler(bool win); //true if win
         public static event GameOverHandler onGameOverE;
