@@ -227,7 +227,7 @@ namespace TDTK
             currentWaveID += 1;
 
 
-            UIGameMessage.DisplayMessage(waveNames[currentWaveID % waveNames.Count] + " approaching..");
+            UIGameMessage.DisplayMessage(waveNames[currentWaveID % waveNames.Count] + " approaching..", 2.5f);
 
             if (currentWaveID >= waveList.Count) return 0;
 
