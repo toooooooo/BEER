@@ -496,8 +496,6 @@ namespace TDTK
                         }
                     }
 
-                    Debug.Log("tower.electicitySources.Count= " + tower.electicitySources.Count);
-
                     if (tower.electicitySources.Count == 0)
                     {
                         // set electricity source for tower weapon
@@ -509,7 +507,7 @@ namespace TDTK
             }
             /***/
 
-            /**********************/
+            /**********************
             // if new electricity reciver is placed search for all towers in it's range and add itself as electricity source
             if (tower.electricityReciever)
             {
@@ -517,7 +515,6 @@ namespace TDTK
 
                 Collider[] cols = Physics.OverlapSphere(buildInfo.position, tower.GetRange(), maskTarget);
 
-                Debug.Log("# towers near is " + cols.Length);
                 if (cols.Length > 0)
                 {
                     UnitTower tmp_tow;
@@ -528,12 +525,11 @@ namespace TDTK
                         if (tmp_tow.electricityReciever || tmp_tow.electricityFacility)
                             continue;
 
-
                         tmp_tow.electicitySources.Add(tower);
                     }
                 }
             }
-            /**********************/
+            **********************/
 
 
             //check if there are sufficient resource
