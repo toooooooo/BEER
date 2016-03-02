@@ -313,7 +313,7 @@ namespace TDTK {
 
         cont = new GUIContent("Electricity needed:", "The amount of enery consumed for one shot");
         EditorGUI.LabelField(new Rect(startX, startY += spaceY, width, height), cont);
-        tower.electricityNeedForShoot = EditorGUI.FloatField(new Rect(startX + spaceX, startY, fWidth, height), tower.electricityNeedForShoot);
+        stat.electricityNeedForShoot = EditorGUI.FloatField(new Rect(startX + spaceX, startY, fWidth, height), stat.electricityNeedForShoot);
 
         /*
 				cont=new GUIContent("Clip Size:", "The amount of attack the unit can do before the unit needs to reload\nWhen set to <0 the unit will never need any reload");

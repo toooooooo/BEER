@@ -324,7 +324,7 @@ namespace TDTK
 
       while (unit != null)
       {
-        float realRegenRate = unit.GetElectricityRegenerationRate();
+        float realRegenRate = unit.GetElectricityRegenerationRate() / 100;
 
         if (unit.platform.gameObject.tag == "Ocean")
           realRegenRate = realRegenRate * 3.0f;       // magic numbers TODO -> create parameters for them
@@ -336,7 +336,7 @@ namespace TDTK
         else
           unit.electricityCurrentlyStored = unit.GetMaxElectricity();
 
-        yield return null;
+        yield return new WaitForSeconds(0.01f); // 1/100
       }
     }
 

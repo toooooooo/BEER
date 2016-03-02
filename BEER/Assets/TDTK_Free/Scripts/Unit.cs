@@ -83,7 +83,7 @@ namespace TDTK
     public bool electricityFacility = false;
     public bool electricityReciever = false;
     public float electricityCurrentlyStored = 0;
-    public float electricityNeedForShoot = 0.1f;
+    //public float electricityNeedForShoot = 0.1f;
     public List<UnitTower> electicitySources = new List<UnitTower>();
 
     // returns first tower that has enough electricityNeedForShoot
@@ -468,7 +468,7 @@ namespace TDTK
       {
 
         // disable shooting while there is no electricity
-        electricitySource = getElectricitySource(electricityNeedForShoot);
+        electricitySource = getElectricitySource(GetElectricityNeedForShoot());
 
         while (electricitySource == null)
         {
@@ -478,7 +478,7 @@ namespace TDTK
             myRenderers[i].material.color = new Color(0.2f, 0.2f, 0.2f);
           }
 
-          electricitySource = getElectricitySource(electricityNeedForShoot);
+          electricitySource = getElectricitySource(GetElectricityNeedForShoot());
           yield return null;
         }
 
@@ -490,7 +490,7 @@ namespace TDTK
 
         // target will shoot so take that energy
         if (electricitySource != null)
-          electricitySource.electricityCurrentlyStored -= electricityNeedForShoot;
+          electricitySource.electricityCurrentlyStored -= GetElectricityNeedForShoot();
 
 
         while (target == null || stunned || IsInConstruction() || !targetInLOS) yield return null;
@@ -826,6 +826,7 @@ namespace TDTK
     public float GetElectricityRegenerationRate() { return stats[currentActiveStat].electricityRegenerationRate; }
     public float GetElectricityReceiveRate() { return stats[currentActiveStat].electricityReceiveRate;  }
     public float GetCurrentElectricity() { return electricityCurrentlyStored; }
+    public float GetElectricityNeedForShoot() { return stats[currentActiveStat].electricityNeedForShoot; }
 
 
 
@@ -912,7 +913,7 @@ namespace TDTK
       else if (tower.type == _TowerType.Electric)
       {
         if (GetMaxElectricity() > 0) text += "Max electricity stored: " + GetMaxElectricity().ToString();
-        if (GetElectricityRegenerationRate() > 0) text += "\nElectricity generated: " + GetElectricityRegenerationRate().ToString();
+        if (GetElectricityRegenerationRate() > 0) text += "\nElectricity generated: " + GetElectricityRegenerationRate().ToString() + " per sec";
         if (GetElectricityReceiveRate() > 0) text += "\nElectricity Transfer Rate: " + GetElectricityReceiveRate().ToString();
         if (GetCurrentElectricity() > 0) text += "\nElectricity available: " + GetCurrentElectricity().ToString();
       }

@@ -21,6 +21,7 @@ namespace TDTK
     public float electricityMaxStored = 20;
     public float electricityRegenerationRate = 0.04f;
     public float electricityReceiveRate = 2.0f;
+    public float electricityNeedForShoot = 0.1f;
     /*******/
 
     public Critical crit;
@@ -73,6 +74,7 @@ namespace TDTK
       stat.electricityMaxStored = electricityMaxStored;
       stat.electricityRegenerationRate = electricityRegenerationRate;
       stat.electricityReceiveRate = electricityReceiveRate;
+      stat.electricityNeedForShoot = electricityNeedForShoot;
 
       for (int i = 0; i < rscGain.Count; i++) stat.rscGain.Add(rscGain[i]);
       for (int i = 0; i < cost.Count; i++) stat.cost.Add(cost[i]);
