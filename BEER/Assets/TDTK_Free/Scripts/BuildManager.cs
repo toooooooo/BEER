@@ -493,7 +493,7 @@ namespace TDTK
             //float test2 = Vector3.Distance(cols[i].gameObject.GetComponent<UnitTower>().transform.position, buildInfo.position);
 
             // if this tower is in range of electricityReciever
-            if (Vector3.Distance(cols[i].gameObject.GetComponent<UnitTower>().transform.position, buildInfo.position) <= (cols[i].gameObject.GetComponent<UnitTower>().GetRange() / 2))
+            if (Vector3.Distance(cols[i].gameObject.GetComponent<UnitTower>().transform.position, buildInfo.position) <= cols[i].gameObject.GetComponent<UnitTower>().GetRange())
             {
               tower.electicitySources.Add(cols[i].gameObject.GetComponent<UnitTower>());
             }
