@@ -13,6 +13,7 @@ namespace BEERPath
     private PathNode startNode;
     private PathNode destinationNode;
     private PathFindingParameters parameters;
+    private List<Point> lastPath;
 
     public PathFinder(PathFindingParameters parameters)
     {
@@ -161,9 +162,15 @@ namespace BEERPath
       return path;
     }
 
+    public List<Point> getLastPath()
+    {
+      return lastPath;
+    }
+
     public PathTD FindPathTD(Transform currentPos, string pathName)
     {
       List<Transform> path = new List<Transform>();
+      lastPath = new List<Point>();
       bool success = SearchPath(this.startNode);
 
 
@@ -176,6 +183,7 @@ namespace BEERPath
         {
           platform = node.GameObject as GameObject;
           path.Add(platform.transform);
+          lastPath.Add(new Point(node.Location.X, node.Location.Y));
           node = node.ParentNode;
         }
 

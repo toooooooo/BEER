@@ -681,7 +681,9 @@ namespace TDTK
     private Object[,] nodeMap = new Object[39, 36];
     PathFindingParameters parameters;
     PathFinder pf;
-    List<PathNode> path;
+
+    private List<Point> lastPathOne;
+    private List<Point> lastPathTwo;
 
     Point pt_spawnOne = new Point(0, 0);
     Point pt_spawnTwo = new Point(0, 0);
@@ -770,17 +772,19 @@ namespace TDTK
       pf = new PathFinder(parameters);
       Transform spawnOneTf = (nodeMap[pt_spawnOne.X, pt_spawnOne.Y] as GameObject).transform;
       PathTD pathOne = pf.FindPathTD(spawnOneTf, "GlobalPathOne");
+      lastPathOne = pf.getLastPath();
 
       parameters = new PathFindingParameters(pt_spawnTwo, pt_goal, beerMap, nodeMap);
       pf = new PathFinder(parameters);
       Transform spawnTwoTf = (nodeMap[pt_spawnTwo.X, pt_spawnTwo.Y] as GameObject).transform;
       PathTD pathTwo = pf.FindPathTD(spawnTwoTf, "GlobalPathTwo");
+      lastPathTwo = pf.getLastPath();
 
       if (pathOne.wpList.Count == 0 || pathTwo.wpList.Count == 0)
       {
         return false;
       }
-
+      
       // TODO better capsulation from the Spawnmanager
       // and also check the initialization of the spawnmanager
       SpawnManager.instance.defaultPath = pathOne;
@@ -799,8 +803,30 @@ namespace TDTK
       if (index_z < 0)
         return true;
 
-      beerMap[index_x, index_z + 1] = destroy;
+      beerMap[index_x, index_z + 1] = destroy;  // false -> new tower build there
 
+
+      // Check if the last paths are still walkable
+      // exit if true
+      if (lastPathOne.Count >= 0 && lastPathTwo.Count >= 0)
+      {
+        bool lastPathOK = true;
+
+        for (int i = 0; i < lastPathOne.Count; i++)
+        {
+          if (beerMap[lastPathOne[i].X, lastPathOne[i].Y] == false)
+            lastPathOK = false;
+        }
+
+        for (int i = 0; i < lastPathTwo.Count; i++)
+        {
+          if (beerMap[lastPathTwo[i].X, lastPathTwo[i].Y] == false)
+            lastPathOK = false;
+        }
+
+        if (lastPathOK)
+          return true;
+      }
 
 
       if (!GenerateGlobalPaths())
