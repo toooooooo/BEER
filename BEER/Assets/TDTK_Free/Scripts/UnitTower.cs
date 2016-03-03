@@ -327,9 +327,9 @@ namespace TDTK
         float realRegenRate = unit.GetElectricityRegenerationRate() / 100;
 
         if (unit.platform.gameObject.tag == "Ocean")
-          realRegenRate = realRegenRate * 3.0f;       // magic numbers TODO -> create parameters for them
+          realRegenRate = realRegenRate * 2.0f;       // magic numbers TODO -> create parameters for them
         else if (unit.platform.gameObject.tag == "Hill")
-          realRegenRate = realRegenRate * 4.0f;
+          realRegenRate = realRegenRate * 3.0f;
 
         if (unit.electricityCurrentlyStored + realRegenRate < unit.GetMaxElectricity())
           unit.electricityCurrentlyStored += realRegenRate;

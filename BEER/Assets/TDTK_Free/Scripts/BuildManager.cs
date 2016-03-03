@@ -802,6 +802,7 @@ namespace TDTK
       beerMap[index_x, index_z + 1] = destroy;
 
 
+
       if (!GenerateGlobalPaths())
       {
         beerMap[index_x, index_z + 1] = !destroy;
