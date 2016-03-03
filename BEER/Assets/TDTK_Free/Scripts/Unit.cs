@@ -153,8 +153,8 @@ namespace TDTK
       }
     }
 
-    private MeshRenderer[] myRenderers;
-    private List<Color> myRenderersColors;
+    protected MeshRenderer[] myRenderers;
+    protected List<Color> myRenderersColors;
 
     public void Init()
     {

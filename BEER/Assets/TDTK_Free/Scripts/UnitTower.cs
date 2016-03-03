@@ -447,18 +447,44 @@ namespace TDTK
         maskTarget = 1 << LayerManager.LayerCreep();
       }
 
+      UnitTower electricitySource;
+
       while (true)
       {
         yield return new WaitForSeconds(GetCooldown());
 
         while (stunned || IsInConstruction()) yield return null;
 
+        // disable shooting while there is no electricity
+        electricitySource = getElectricitySource(GetElectricityNeedForShoot());
+
+        while (electricitySource == null)
+        {
+          // Paint deactivated towers black
+          for (int i = 0; i < myRenderers.Length; i++)
+          {
+            myRenderers[i].material.color = new Color(0.2f, 0.2f, 0.2f);
+          }
+
+          electricitySource = getElectricitySource(GetElectricityNeedForShoot());
+          yield return null;
+        }
+
+        // Restore original color
+        for (int i = 0; i < myRenderers.Length; i++)
+        {
+          myRenderers[i].material.color = myRenderersColors[i];
+        }
+
         Transform soPrefab = GetShootObjectT();
         if (soPrefab != null) Instantiate(soPrefab, thisT.position, thisT.rotation);
 
         Collider[] cols = Physics.OverlapSphere(thisT.position, GetRange(), maskTarget);
-        if (cols.Length > 0)
+        if (electricitySource != null && !electricitySource.dead && cols.Length > 0)
         {
+          // target will shoot so take that energy
+          electricitySource.electricityCurrentlyStored -= GetElectricityNeedForShoot();
+
           for (int i = 0; i < cols.Length; i++)
           {
             Unit unit = cols[i].transform.GetComponent<Unit>();
